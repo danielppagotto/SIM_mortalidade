@@ -1,0 +1,24 @@
+{
+    "id": "BC204608",
+    "path": "~/Dimensionamento/Demanda urg e emergencia/Indicadores de óbitos/indicadores_óbitos_UF.R",
+    "project_path": null,
+    "type": "r_source",
+    "hash": "1586912968",
+    "contents": "",
+    "dirty": false,
+    "created": 1647973179918.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "cursorPosition": "647,45",
+        "scrollLine": "642"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1644175287,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1644175287,
+    "read_only": false,
+    "read_only_alternatives": []
+}

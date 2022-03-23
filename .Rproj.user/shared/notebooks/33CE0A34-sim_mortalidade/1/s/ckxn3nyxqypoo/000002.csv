@@ -1,0 +1,4 @@
+"0","sim19 <- sqlQuery(channel, ""SELECT TIPOBITO, DTOBITO, DTNASC, IDADE, SEXO,"
+"0","                                CODMUNRES, CAUSABAS, uf, competencia  "
+"0","                                FROM Dados.sim.DO"
+"0","                                WHERE competencia = 2019"")"

@@ -1,0 +1,286 @@
+"","regiao","capitulo","ano","obitos","ANO","regiao_pad","pop","taxa"
+"1","1","Algumas afecções originadas no período perinatal",2019,2536,2019,"REGIAO NORTE",18774093,13.5079761243326
+"2","1","Algumas doenças infecciosas e parasitárias",2019,4221,2019,"REGIAO NORTE",18774093,22.4831101028423
+"3","1","Causas externas de morbidade e de mortalidade",2019,14055,2019,"REGIAO NORTE",18774093,74.8638030076873
+"4","1","Doenças da pele e do tecido subcutâneo",2019,318,2019,"REGIAO NORTE",18774093,1.69382350454959
+"5","1","Doenças do aparelho circulatório",2019,19603,2019,"REGIAO NORTE",18774093,104.415164024169
+"6","1","Doenças do aparelho digestivo",2019,3858,2019,"REGIAO NORTE",18774093,20.5495945929319
+"7","1","Doenças do aparelho geniturinário",2019,2236,2019,"REGIAO NORTE",18774093,11.9100294219273
+"8","1","Doenças do aparelho respiratório",2019,9064,2019,"REGIAO NORTE",18774093,48.2792963686714
+"9","1","Doenças do olho e anexos",2019,3,2019,"REGIAO NORTE",18774093,0.0159794670240528
+"10","1","Doenças do ouvido e da apófise mastóide",2019,13,2019,"REGIAO NORTE",18774093,0.0692443571042287
+"11","1","Doenças do sangue e dos órgãos hematopoéticos e alguns transtornos imunitários",2019,531,2019,"REGIAO NORTE",18774093,2.82836566325734
+"12","1","Doenças do sistema nervoso",2019,1731,2019,"REGIAO NORTE",18774093,9.22015247287845
+"13","1","Doenças do sistema osteomuscular e do tecido conjuntivo",2019,313,2019,"REGIAO NORTE",18774093,1.66719105950951
+"14","1","Doenças endócrinas, nutricionais e metabólicas",2019,6128,2019,"REGIAO NORTE",18774093,32.6407246411318
+"15","1","Gravidez, parto e puerpério",2019,250,2019,"REGIAO NORTE",18774093,1.3316222520044
+"16","1","Malformações congênitas, deformidades e anomalias cromossômicas",2019,1248,2019,"REGIAO NORTE",18774093,6.64745828200595
+"17","1","Neoplasmas [tumores]",2019,12098,2019,"REGIAO NORTE",18774093,64.4398640189968
+"18","1","Sintomas, sinais e achados anormais de exames clínicos e de laboratório, não classificados em outra parte",2019,7034,2019,"REGIAO NORTE",18774093,37.4665236823957
+"19","1","Transtornos mentais e comportamentais",2019,446,2019,"REGIAO NORTE",18774093,2.37561409757585
+"20","2","Algumas afecções originadas no período perinatal",2019,6545,2019,"REGIAO NORDESTE",57071654,11.4680398083434
+"21","2","Algumas doenças infecciosas e parasitárias",2019,15222,2019,"REGIAO NORDESTE",57071654,26.6717344480677
+"22","2","Causas externas de morbidade e de mortalidade",2019,44284,2019,"REGIAO NORDESTE",57071654,77.5936860004092
+"23","2","Doenças da pele e do tecido subcutâneo",2019,2247,2019,"REGIAO NORDESTE",57071654,3.93715591281094
+"24","2","Doenças do aparelho circulatório",2019,96244,2019,"REGIAO NORDESTE",57071654,168.637131140443
+"25","2","Doenças do aparelho digestivo",2019,18158,2019,"REGIAO NORDESTE",57071654,31.816144666142
+"26","2","Doenças do aparelho geniturinário",2019,10310,2019,"REGIAO NORDESTE",57071654,18.0650099960306
+"27","2","Doenças do aparelho respiratório",2019,38807,2019,"REGIAO NORDESTE",57071654,67.9969779743899
+"28","2","Doenças do olho e anexos",2019,7,2019,"REGIAO NORDESTE",57071654,0.0122652832174796
+"29","2","Doenças do ouvido e da apófise mastóide",2019,50,2019,"REGIAO NORDESTE",57071654,0.0876091658391397
+"30","2","Doenças do sangue e dos órgãos hematopoéticos e alguns transtornos imunitários",2019,2053,2019,"REGIAO NORDESTE",57071654,3.59723234935508
+"31","2","Doenças do sistema nervoso",2019,9189,2019,"REGIAO NORDESTE",57071654,16.1008124979171
+"32","2","Doenças do sistema osteomuscular e do tecido conjuntivo",2019,1687,2019,"REGIAO NORDESTE",57071654,2.95593325541257
+"33","2","Doenças endócrinas, nutricionais e metabólicas",2019,25447,2019,"REGIAO NORDESTE",57071654,44.5878088621718
+"34","2","Gravidez, parto e puerpério",2019,542,2019,"REGIAO NORDESTE",57071654,0.949683357696274
+"35","2","Malformações congênitas, deformidades e anomalias cromossômicas",2019,3268,2019,"REGIAO NORDESTE",57071654,5.72613507924617
+"36","2","Neoplasmas [tumores]",2019,52717,2019,"REGIAO NORDESTE",57071654,92.3698479108385
+"37","2","Sintomas, sinais e achados anormais de exames clínicos e de laboratório, não classificados em outra parte",2019,21994,2019,"REGIAO NORDESTE",57071654,38.5375198693208
+"38","2","Transtornos mentais e comportamentais",2019,4030,2019,"REGIAO NORDESTE",57071654,7.06129876663466
+"39","3","Algumas afecções originadas no período perinatal",2019,7423,2019,"REGIAO SUDESTE",88371433,8.39977326156972
+"40","3","Algumas doenças infecciosas e parasitárias",2019,25701,2019,"REGIAO SUDESTE",88371433,29.082927737519
+"41","3","Causas externas de morbidade e de mortalidade",2019,52133,2019,"REGIAO SUDESTE",88371433,58.9930458635881
+"42","3","Doenças da pele e do tecido subcutâneo",2019,3613,2019,"REGIAO SUDESTE",88371433,4.08842527199938
+"43","3","Doenças do aparelho circulatório",2019,170916,2019,"REGIAO SUDESTE",88371433,193.406391859686
+"44","3","Doenças do aparelho digestivo",2019,31583,2019,"REGIAO SUDESTE",88371433,35.7389248174803
+"45","3","Doenças do aparelho geniturinário",2019,25959,2019,"REGIAO SUDESTE",88371433,29.374877286419
+"46","3","Doenças do aparelho respiratório",2019,78472,2019,"REGIAO SUDESTE",88371433,88.7979263615653
+"47","3","Doenças do olho e anexos",2019,10,2019,"REGIAO SUDESTE",88371433,0.0113158739883736
+"48","3","Doenças do ouvido e da apófise mastóide",2019,105,2019,"REGIAO SUDESTE",88371433,0.118816676877923
+"49","3","Doenças do sangue e dos órgãos hematopoéticos e alguns transtornos imunitários",2019,3240,2019,"REGIAO SUDESTE",88371433,3.66634317223305
+"50","3","Doenças do sistema nervoso",2019,21891,2019,"REGIAO SUDESTE",88371433,24.7715797479486
+"51","3","Doenças do sistema osteomuscular e do tecido conjuntivo",2019,3291,2019,"REGIAO SUDESTE",88371433,3.72405412957375
+"52","3","Doenças endócrinas, nutricionais e metabólicas",2019,33269,2019,"REGIAO SUDESTE",88371433,37.6467811719201
+"53","3","Gravidez, parto e puerpério",2019,627,2019,"REGIAO SUDESTE",88371433,0.709505299071024
+"54","3","Malformações congênitas, deformidades e anomalias cromossômicas",2019,4197,2019,"REGIAO SUDESTE",88371433,4.7492723129204
+"55","3","Neoplasmas [tumores]",2019,110909,2019,"REGIAO SUDESTE",88371433,125.503226817653
+"56","3","Sintomas, sinais e achados anormais de exames clínicos e de laboratório, não classificados em outra parte",2019,36049,2019,"REGIAO SUDESTE",88371433,40.792594140688
+"57","3","Transtornos mentais e comportamentais",2019,6855,2019,"REGIAO SUDESTE",88371433,7.7570316190301
+"58","4","Algumas afecções originadas no período perinatal",2019,2281,2019,"REGIAO SUL",29975984,7.60942493163861
+"59","4","Algumas doenças infecciosas e parasitárias",2019,7571,2019,"REGIAO SUL",29975984,25.2568856455221
+"60","4","Causas externas de morbidade e de mortalidade",2019,20329,2019,"REGIAO SUL",29975984,67.8176236016139
+"61","4","Doenças da pele e do tecido subcutâneo",2019,674,2019,"REGIAO SUL",29975984,2.2484666391602
+"62","4","Doenças do aparelho circulatório",2019,54161,2019,"REGIAO SUL",29975984,180.681308076492
+"63","4","Doenças do aparelho digestivo",2019,10276,2019,"REGIAO SUL",29975984,34.2807762374039
+"64","4","Doenças do aparelho geniturinário",2019,6202,2019,"REGIAO SUL",29975984,20.6898962849727
+"65","4","Doenças do aparelho respiratório",2019,25044,2019,"REGIAO SUL",29975984,83.5468820639883
+"66","4","Doenças do olho e anexos",2019,2,2019,"REGIAO SUL",29975984,0.00667200783133591
+"67","4","Doenças do ouvido e da apófise mastóide",2019,21,2019,"REGIAO SUL",29975984,0.0700560822290271
+"68","4","Doenças do sangue e dos órgãos hematopoéticos e alguns transtornos imunitários",2019,793,2019,"REGIAO SUL",29975984,2.64545110512469
+"69","4","Doenças do sistema nervoso",2019,9463,2019,"REGIAO SUL",29975984,31.5686050539659
+"70","4","Doenças do sistema osteomuscular e do tecido conjuntivo",2019,817,2019,"REGIAO SUL",29975984,2.72551519910072
+"71","4","Doenças endócrinas, nutricionais e metabólicas",2019,13271,2019,"REGIAO SUL",29975984,44.2721079648294
+"72","4","Gravidez, parto e puerpério",2019,159,2019,"REGIAO SUL",29975984,0.530424622591205
+"73","4","Malformações congênitas, deformidades e anomalias cromossômicas",2019,1565,2019,"REGIAO SUL",29975984,5.22084612802035
+"74","4","Neoplasmas [tumores]",2019,44064,2019,"REGIAO SUL",29975984,146.997676539993
+"75","4","Sintomas, sinais e achados anormais de exames clínicos e de laboratório, não classificados em outra parte",2019,7253,2019,"REGIAO SUL",29975984,24.1960364003397
+"76","4","Transtornos mentais e comportamentais",2019,2140,2019,"REGIAO SUL",29975984,7.13904837952943
+"77","5","Algumas afecções originadas no período perinatal",2019,1569,2019,"REGIAO CENTRO-OESTE",16297074,9.6274950951318
+"78","5","Algumas doenças infecciosas e parasitárias",2019,3951,2019,"REGIAO CENTRO-OESTE",16297074,24.2436157558099
+"79","5","Causas externas de morbidade e de mortalidade",2019,11999,2019,"REGIAO CENTRO-OESTE",16297074,73.6267136051539
+"80","5","Doenças da pele e do tecido subcutâneo",2019,300,2019,"REGIAO CENTRO-OESTE",16297074,1.84082124189901
+"81","5","Doenças do aparelho circulatório",2019,23208,2019,"REGIAO CENTRO-OESTE",16297074,142.405931273307
+"82","5","Doenças do aparelho digestivo",2019,4895,2019,"REGIAO CENTRO-OESTE",16297074,30.0360665969854
+"83","5","Doenças do aparelho geniturinário",2019,2859,2019,"REGIAO CENTRO-OESTE",16297074,17.5430264352975
+"84","5","Doenças do aparelho respiratório",2019,10618,2019,"REGIAO CENTRO-OESTE",16297074,65.1527998216121
+"85","5","Doenças do olho e anexos",2019,1,2019,"REGIAO CENTRO-OESTE",16297074,0.00613607080633002
+"86","5","Doenças do ouvido e da apófise mastóide",2019,17,2019,"REGIAO CENTRO-OESTE",16297074,0.10431320370761
+"87","5","Doenças do sangue e dos órgãos hematopoéticos e alguns transtornos imunitários",2019,451,2019,"REGIAO CENTRO-OESTE",16297074,2.76736793365484
+"88","5","Doenças do sistema nervoso",2019,2961,2019,"REGIAO CENTRO-OESTE",16297074,18.1689056575432
+"89","5","Doenças do sistema osteomuscular e do tecido conjuntivo",2019,398,2019,"REGIAO CENTRO-OESTE",16297074,2.44215618091935
+"90","5","Doenças endócrinas, nutricionais e metabólicas",2019,5370,2019,"REGIAO CENTRO-OESTE",16297074,32.9507002299922
+"91","5","Gravidez, parto e puerpério",2019,148,2019,"REGIAO CENTRO-OESTE",16297074,0.908138479336843
+"92","5","Malformações congênitas, deformidades e anomalias cromossômicas",2019,1030,2019,"REGIAO CENTRO-OESTE",16297074,6.32015293051992
+"93","5","Neoplasmas [tumores]",2019,15513,2019,"REGIAO CENTRO-OESTE",16297074,95.1888664185976
+"94","5","Sintomas, sinais e achados anormais de exames clínicos e de laboratório, não classificados em outra parte",2019,2642,2019,"REGIAO CENTRO-OESTE",16297074,16.2114990703239
+"95","5","Transtornos mentais e comportamentais",2019,1055,2019,"REGIAO CENTRO-OESTE",16297074,6.47355470067817
+"96","1","Algumas afecções originadas no período perinatal",2020,16417,2020,"REGIAO NORTE",19014802,86.3380013107683
+"97","1","Algumas doenças infecciosas e parasitárias",2020,165376,2020,"REGIAO NORTE",19014802,869.722440444029
+"98","1","Causas externas de morbidade e de mortalidade",2020,122631,2020,"REGIAO NORTE",19014802,644.923886138809
+"99","1","Doenças da pele e do tecido subcutâneo",2020,1329,2020,"REGIAO NORTE",19014802,6.9892918159232
+"100","1","Doenças do aparelho circulatório",2020,95418,2020,"REGIAO NORTE",19014802,501.809064327885
+"101","1","Doenças do aparelho digestivo",2020,23234,2020,"REGIAO NORTE",19014802,122.189018849631
+"102","1","Doenças do aparelho geniturinário",2020,9970,2020,"REGIAO NORTE",19014802,52.4328362714479
+"103","1","Doenças do aparelho respiratório",2020,58171,2020,"REGIAO NORTE",19014802,305.924826353701
+"104","1","Doenças do olho e anexos",2020,50,2020,"REGIAO NORTE",19014802,0.262953040478676
+"105","1","Doenças do ouvido e da apófise mastóide",2020,92,2020,"REGIAO NORTE",19014802,0.483833594480763
+"106","1","Doenças do sangue e dos órgãos hematopoéticos e alguns transtornos imunitários",2020,3086,2020,"REGIAO NORTE",19014802,16.2294616583439
+"107","1","Doenças do sistema nervoso",2020,9623,2020,"REGIAO NORTE",19014802,50.6079421705259
+"108","1","Doenças do sistema osteomuscular e do tecido conjuntivo",2020,2063,2020,"REGIAO NORTE",19014802,10.8494424501502
+"109","1","Doenças endócrinas, nutricionais e metabólicas",2020,60958,2020,"REGIAO NORTE",19014802,320.581828829982
+"110","1","Gravidez, parto e puerpério",2020,1789,2020,"REGIAO NORTE",19014802,9.40845978832701
+"111","1","Malformações congênitas, deformidades e anomalias cromossômicas",2020,7799,2020,"REGIAO NORTE",19014802,41.0154152538638
+"112","1","Neoplasmas [tumores]",2020,71836,2020,"REGIAO NORTE",19014802,377.789892316523
+"113","1","Sintomas, sinais e achados anormais de exames clínicos e de laboratório, não classificados em outra parte",2020,14127,2020,"REGIAO NORTE",19014802,74.294752056845
+"114","1","Transtornos mentais e comportamentais",2020,4848,2020,"REGIAO NORTE",19014802,25.4959268048124
+"115","2","Algumas afecções originadas no período perinatal",2020,39704,2020,"REGIAO NORDESTE",57374243,69.2017845011044
+"116","2","Algumas doenças infecciosas e parasitárias",2020,472701,2020,"REGIAO NORDESTE",57374243,823.890608892217
+"117","2","Causas externas de morbidade e de mortalidade",2020,445047,2020,"REGIAO NORDESTE",57374243,775.691280144646
+"118","2","Doenças da pele e do tecido subcutâneo",2020,8331,2020,"REGIAO NORDESTE",57374243,14.5204530193104
+"119","2","Doenças do aparelho circulatório",2020,444249,2020,"REGIAO NORDESTE",57374243,774.30041212047
+"120","2","Doenças do aparelho digestivo",2020,113338,2020,"REGIAO NORDESTE",57374243,197.541604165479
+"121","2","Doenças do aparelho geniturinário",2020,51258,2020,"REGIAO NORDESTE",57374243,89.3397408310904
+"122","2","Doenças do aparelho respiratório",2020,205450,2020,"REGIAO NORDESTE",57374243,358.087513241787
+"123","2","Doenças do olho e anexos",2020,76,2020,"REGIAO NORDESTE",57374243,0.132463621350089
+"124","2","Doenças do ouvido e da apófise mastóide",2020,270,2020,"REGIAO NORDESTE",57374243,0.470594444270053
+"125","2","Doenças do sangue e dos órgãos hematopoéticos e alguns transtornos imunitários",2020,11426,2020,"REGIAO NORDESTE",57374243,19.9148597045542
+"126","2","Doenças do sistema nervoso",2020,46644,2020,"REGIAO NORDESTE",57374243,81.297804661231
+"127","2","Doenças do sistema osteomuscular e do tecido conjuntivo",2020,12332,2020,"REGIAO NORDESTE",57374243,21.4939655064381
+"128","2","Doenças endócrinas, nutricionais e metabólicas",2020,260625,2020,"REGIAO NORDESTE",57374243,454.254359399565
+"129","2","Gravidez, parto e puerpério",2020,3913,2020,"REGIAO NORDESTE",57374243,6.8201335571434
+"130","2","Malformações congênitas, deformidades e anomalias cromossômicas",2020,20917,2020,"REGIAO NORDESTE",57374243,36.4571258918397
+"131","2","Neoplasmas [tumores]",2020,312265,2020,"REGIAO NORDESTE",57374243,544.259904222179
+"132","2","Sintomas, sinais e achados anormais de exames clínicos e de laboratório, não classificados em outra parte",2020,44771,2020,"REGIAO NORDESTE",57374243,78.0332735719058
+"133","2","Transtornos mentais e comportamentais",2020,43772,2020,"REGIAO NORDESTE",57374243,76.2920741281066
+"134","3","Algumas afecções originadas no período perinatal",2020,44866,2020,"REGIAO SUDESTE",89012240,50.4043039474122
+"135","3","Algumas doenças infecciosas e parasitárias",2020,848677,2020,"REGIAO SUDESTE",89012240,953.438538340345
+"136","3","Causas externas de morbidade e de mortalidade",2020,464099,2020,"REGIAO SUDESTE",89012240,521.387845087372
+"137","3","Doenças da pele e do tecido subcutâneo",2020,13375,2020,"REGIAO SUDESTE",89012240,15.0260233873454
+"138","3","Doenças do aparelho circulatório",2020,827947,2020,"REGIAO SUDESTE",89012240,930.149606391211
+"139","3","Doenças do aparelho digestivo",2020,188068,2020,"REGIAO SUDESTE",89012240,211.28330216159
+"140","3","Doenças do aparelho geniturinário",2020,135317,2020,"REGIAO SUDESTE",89012240,152.0206659219
+"141","3","Doenças do aparelho respiratório",2020,413963,2020,"REGIAO SUDESTE",89012240,465.063007065096
+"142","3","Doenças do olho e anexos",2020,76,2020,"REGIAO SUDESTE",89012240,0.0853815160701494
+"143","3","Doenças do ouvido e da apófise mastóide",2020,421,2020,"REGIAO SUDESTE",89012240,0.472968661388591
+"144","3","Doenças do sangue e dos órgãos hematopoéticos e alguns transtornos imunitários",2020,18853,2020,"REGIAO SUDESTE",89012240,21.1802331904017
+"145","3","Doenças do sistema nervoso",2020,99051,2020,"REGIAO SUDESTE",89012240,111.277954582426
+"146","3","Doenças do sistema osteomuscular e do tecido conjuntivo",2020,21588,2020,"REGIAO SUDESTE",89012240,24.2528443279261
+"147","3","Doenças endócrinas, nutricionais e metabólicas",2020,331746,2020,"REGIAO SUDESTE",89012240,372.697058292208
+"148","3","Gravidez, parto e puerpério",2020,4311,2020,"REGIAO SUDESTE",89012240,4.84315415497914
+"149","3","Malformações congênitas, deformidades e anomalias cromossômicas",2020,27209,2020,"REGIAO SUDESTE",89012240,30.5677061941144
+"150","3","Neoplasmas [tumores]",2020,667705,2020,"REGIAO SUDESTE",89012240,750.127173521304
+"151","3","Sintomas, sinais e achados anormais de exames clínicos e de laboratório, não classificados em outra parte",2020,64653,2020,"REGIAO SUDESTE",89012240,72.633831032676
+"152","3","Transtornos mentais e comportamentais",2020,53518,2020,"REGIAO SUDESTE",89012240,60.1243154873981
+"153","4","Algumas afecções originadas no período perinatal",2020,13805,2020,"REGIAO SUL",30192315,45.723555812133
+"154","4","Algumas doenças infecciosas e parasitárias",2020,206688,2020,"REGIAO SUL",30192315,684.571554052745
+"155","4","Causas externas de morbidade e de mortalidade",2020,182526,2020,"REGIAO SUL",30192315,604.544567052907
+"156","4","Doenças da pele e do tecido subcutâneo",2020,2904,2020,"REGIAO SUL",30192315,9.61834162103833
+"157","4","Doenças do aparelho circulatório",2020,270412,2020,"REGIAO SUL",30192315,895.631885133684
+"158","4","Doenças do aparelho digestivo",2020,64295,2020,"REGIAO SUL",30192315,212.951540814277
+"159","4","Doenças do aparelho geniturinário",2020,31339,2020,"REGIAO SUL",30192315,103.797936660372
+"160","4","Doenças do aparelho respiratório",2020,100098,2020,"REGIAO SUL",30192315,331.534696825997
+"161","4","Doenças do olho e anexos",2020,4,2020,"REGIAO SUL",30192315,0.0132484044366919
+"162","4","Doenças do ouvido e da apófise mastóide",2020,69,2020,"REGIAO SUL",30192315,0.228534976532936
+"163","4","Doenças do sangue e dos órgãos hematopoéticos e alguns transtornos imunitários",2020,4123,2020,"REGIAO SUL",30192315,13.6557928731202
+"164","4","Doenças do sistema nervoso",2020,41624,2020,"REGIAO SUL",30192315,137.862896568216
+"165","4","Doenças do sistema osteomuscular e do tecido conjuntivo",2020,5346,2020,"REGIAO SUL",30192315,17.7064925296387
+"166","4","Doenças endócrinas, nutricionais e metabólicas",2020,122639,2020,"REGIAO SUL",30192315,406.192767927865
+"167","4","Gravidez, parto e puerpério",2020,915,2020,"REGIAO SUL",30192315,3.03057251489328
+"168","4","Malformações congênitas, deformidades e anomalias cromossômicas",2020,9877,2020,"REGIAO SUL",30192315,32.7136226553015
+"169","4","Neoplasmas [tumores]",2020,274630,2020,"REGIAO SUL",30192315,909.602327612176
+"170","4","Sintomas, sinais e achados anormais de exames clínicos e de laboratório, não classificados em outra parte",2020,16419,2020,"REGIAO SUL",30192315,54.3813881115112
+"171","4","Transtornos mentais e comportamentais",2020,20087,2020,"REGIAO SUL",30192315,66.5301749799576
+"172","5","Algumas afecções originadas no período perinatal",2020,10298,2020,"REGIAO CENTRO-OESTE",16504303,62.3958491309812
+"173","5","Algumas doenças infecciosas e parasitárias",2020,148090,2020,"REGIAO CENTRO-OESTE",16504303,897.281151466984
+"174","5","Causas externas de morbidade e de mortalidade",2020,110183,2020,"REGIAO CENTRO-OESTE",16504303,667.601655156234
+"175","5","Doenças da pele e do tecido subcutâneo",2020,1323,2020,"REGIAO CENTRO-OESTE",16504303,8.01609131873064
+"176","5","Doenças do aparelho circulatório",2020,125974,2020,"REGIAO CENTRO-OESTE",16504303,763.279733776095
+"177","5","Doenças do aparelho digestivo",2020,30522,2020,"REGIAO CENTRO-OESTE",16504303,184.933589743232
+"178","5","Doenças do aparelho geniturinário",2020,15027,2020,"REGIAO CENTRO-OESTE",16504303,91.0489828016366
+"179","5","Doenças do aparelho respiratório",2020,49332,2020,"REGIAO CENTRO-OESTE",16504303,298.903867676205
+"180","5","Doenças do olho e anexos",2020,4,2020,"REGIAO CENTRO-OESTE",16504303,0.0242361037603345
+"181","5","Doenças do ouvido e da apófise mastóide",2020,39,2020,"REGIAO CENTRO-OESTE",16504303,0.236302011663261
+"182","5","Doenças do sangue e dos órgãos hematopoéticos e alguns transtornos imunitários",2020,2431,2020,"REGIAO CENTRO-OESTE",16504303,14.7294920603433
+"183","5","Doenças do sistema nervoso",2020,15037,2020,"REGIAO CENTRO-OESTE",16504303,91.1095730610375
+"184","5","Doenças do sistema osteomuscular e do tecido conjuntivo",2020,2442,2020,"REGIAO CENTRO-OESTE",16504303,14.7961413456842
+"185","5","Doenças endócrinas, nutricionais e metabólicas",2020,49247,2020,"REGIAO CENTRO-OESTE",16504303,298.388850471298
+"186","5","Gravidez, parto e puerpério",2020,1058,2020,"REGIAO CENTRO-OESTE",16504303,6.41044944460848
+"187","5","Malformações congênitas, deformidades e anomalias cromossômicas",2020,6595,2020,"REGIAO CENTRO-OESTE",16504303,39.9592760748515
+"188","5","Neoplasmas [tumores]",2020,93516,2020,"REGIAO CENTRO-OESTE",16504303,566.61586981286
+"189","5","Sintomas, sinais e achados anormais de exames clínicos e de laboratório, não classificados em outra parte",2020,5995,2020,"REGIAO CENTRO-OESTE",16504303,36.3238605108013
+"190","5","Transtornos mentais e comportamentais",2020,10189,2020,"REGIAO CENTRO-OESTE",16504303,61.7354153035121
+"191","1","Algumas afecções originadas no período perinatal",2021,28026,2020,"REGIAO NORTE",19014802,147.390438249107
+"192","1","Algumas doenças infecciosas e parasitárias",2021,224772,2020,"REGIAO NORTE",19014802,1182.08961628946
+"193","1","Causas externas de morbidade e de mortalidade",2021,94838,2020,"REGIAO NORTE",19014802,498.758809058333
+"194","1","Doenças da pele e do tecido subcutâneo",2021,1050,2020,"REGIAO NORTE",19014802,5.52201385005219
+"195","1","Doenças do aparelho circulatório",2021,74767,2020,"REGIAO NORTE",19014802,393.204199549383
+"196","1","Doenças do aparelho digestivo",2021,19789,2020,"REGIAO NORTE",19014802,104.07155436065
+"197","1","Doenças do aparelho geniturinário",2021,8450,2020,"REGIAO NORTE",19014802,44.4390638408962
+"198","1","Doenças do aparelho respiratório",2021,39784,2020,"REGIAO NORTE",19014802,209.226475248073
+"199","1","Doenças do olho e anexos",2021,8,2020,"REGIAO NORTE",19014802,0.0420724864765881
+"200","1","Doenças do ouvido e da apófise mastóide",2021,83,2020,"REGIAO NORTE",19014802,0.436502047194601
+"201","1","Doenças do sangue e dos órgãos hematopoéticos e alguns transtornos imunitários",2021,2536,2020,"REGIAO NORTE",19014802,13.3369782130784
+"202","1","Doenças do sistema nervoso",2021,7715,2020,"REGIAO NORTE",19014802,40.5736541458596
+"203","1","Doenças do sistema osteomuscular e do tecido conjuntivo",2021,1716,2020,"REGIAO NORTE",19014802,9.02454834922814
+"204","1","Doenças endócrinas, nutricionais e metabólicas",2021,43640,2020,"REGIAO NORTE",19014802,229.505413729788
+"205","1","Gravidez, parto e puerpério",2021,2884,2020,"REGIAO NORTE",19014802,15.16713137481
+"206","1","Malformações congênitas, deformidades e anomalias cromossômicas",2021,7283,2020,"REGIAO NORTE",19014802,38.3017398761239
+"207","1","Neoplasmas [tumores]",2021,55441,2020,"REGIAO NORTE",19014802,291.567590343565
+"208","1","Sintomas, sinais e achados anormais de exames clínicos e de laboratório, não classificados em outra parte",2021,10594,2020,"REGIAO NORTE",19014802,55.7144902166218
+"209","1","Transtornos mentais e comportamentais",2021,3789,2020,"REGIAO NORTE",19014802,19.926581407474
+"210","2","Algumas afecções originadas no período perinatal",2021,66804,2020,"REGIAO NORDESTE",57374243,116.435523166728
+"211","2","Algumas doenças infecciosas e parasitárias",2021,588812,2020,"REGIAO NORDESTE",57374243,1026.26539229459
+"212","2","Causas externas de morbidade e de mortalidade",2021,316357,2020,"REGIAO NORDESTE",57374243,551.392024466449
+"213","2","Doenças da pele e do tecido subcutâneo",2021,7409,2020,"REGIAO NORDESTE",57374243,12.9134601392475
+"214","2","Doenças do aparelho circulatório",2021,330684,2020,"REGIAO NORDESTE",57374243,576.363160033327
+"215","2","Doenças do aparelho digestivo",2021,86939,2020,"REGIAO NORDESTE",57374243,151.529668112571
+"216","2","Doenças do aparelho geniturinário",2021,41255,2020,"REGIAO NORDESTE",57374243,71.905088142078
+"217","2","Doenças do aparelho respiratório",2021,141830,2020,"REGIAO NORDESTE",57374243,247.201518632673
+"218","2","Doenças do olho e anexos",2021,42,2020,"REGIAO NORDESTE",57374243,0.0732035802197861
+"219","2","Doenças do ouvido e da apófise mastóide",2021,174,2020,"REGIAO NORDESTE",57374243,0.303271975196257
+"220","2","Doenças do sangue e dos órgãos hematopoéticos e alguns transtornos imunitários",2021,8878,2020,"REGIAO NORDESTE",57374243,15.4738425045538
+"221","2","Doenças do sistema nervoso",2021,36276,2020,"REGIAO NORDESTE",57374243,63.2269780012609
+"222","2","Doenças do sistema osteomuscular e do tecido conjuntivo",2021,9171,2020,"REGIAO NORDESTE",57374243,15.9845246237061
+"223","2","Doenças endócrinas, nutricionais e metabólicas",2021,186270,2020,"REGIAO NORDESTE",57374243,324.657878274751
+"224","2","Gravidez, parto e puerpério",2021,4263,2020,"REGIAO NORDESTE",57374243,7.43016339230829
+"225","2","Malformações congênitas, deformidades e anomalias cromossômicas",2021,18218,2020,"REGIAO NORDESTE",57374243,31.7529243915253
+"226","2","Neoplasmas [tumores]",2021,233518,2020,"REGIAO NORDESTE",57374243,407.008420137238
+"227","2","Sintomas, sinais e achados anormais de exames clínicos e de laboratório, não classificados em outra parte",2021,37434,2020,"REGIAO NORDESTE",57374243,65.2453052844636
+"228","2","Transtornos mentais e comportamentais",2021,30884,2020,"REGIAO NORDESTE",57374243,53.8290326549494
+"229","3","Algumas afecções originadas no período perinatal",2021,76511,2020,"REGIAO SUDESTE",89012240,85.9555944216211
+"230","3","Algumas doenças infecciosas e parasitárias",2021,1516677,2020,"REGIAO SUDESTE",89012240,1703.89712695692
+"231","3","Causas externas de morbidade e de mortalidade",2021,346062,2020,"REGIAO SUDESTE",89012240,388.780239661422
+"232","3","Doenças da pele e do tecido subcutâneo",2021,12176,2020,"REGIAO SUDESTE",89012240,13.6790176272387
+"233","3","Doenças do aparelho circulatório",2021,640510,2020,"REGIAO SUDESTE",89012240,719.575195501203
+"234","3","Doenças do aparelho digestivo",2021,148802,2020,"REGIAO SUDESTE",89012240,167.170267819347
+"235","3","Doenças do aparelho geniturinário",2021,114487,2020,"REGIAO SUDESTE",89012240,128.619389872674
+"236","3","Doenças do aparelho respiratório",2021,270073,2020,"REGIAO SUDESTE",89012240,303.411081442283
+"237","3","Doenças do olho e anexos",2021,58,2020,"REGIAO SUDESTE",89012240,0.0651595780535351
+"238","3","Doenças do ouvido e da apófise mastóide",2021,315,2020,"REGIAO SUDESTE",89012240,0.353883915290751
+"239","3","Doenças do sangue e dos órgãos hematopoéticos e alguns transtornos imunitários",2021,15061,2020,"REGIAO SUDESTE",89012240,16.9201449149016
+"240","3","Doenças do sistema nervoso",2021,75812,2020,"REGIAO SUDESTE",89012240,85.1703091619759
+"241","3","Doenças do sistema osteomuscular e do tecido conjuntivo",2021,15061,2020,"REGIAO SUDESTE",89012240,16.9201449149016
+"242","3","Doenças endócrinas, nutricionais e metabólicas",2021,260862,2020,"REGIAO SUDESTE",89012240,293.063066382781
+"243","3","Gravidez, parto e puerpério",2021,6534,2020,"REGIAO SUDESTE",89012240,7.34056350003101
+"244","3","Malformações congênitas, deformidades e anomalias cromossômicas",2021,24018,2020,"REGIAO SUDESTE",89012240,26.9828059601691
+"245","3","Neoplasmas [tumores]",2021,496064,2020,"REGIAO SUDESTE",89012240,557.298636681877
+"246","3","Sintomas, sinais e achados anormais de exames clínicos e de laboratório, não classificados em outra parte",2021,58168,2020,"REGIAO SUDESTE",89012240,65.3483161416902
+"247","3","Transtornos mentais e comportamentais",2021,41043,2020,"REGIAO SUDESTE",89012240,46.1093890008835
+"248","4","Algumas afecções originadas no período perinatal",2021,22114,2020,"REGIAO SUL",30192315,73.2438039282513
+"249","4","Algumas doenças infecciosas e parasitárias",2021,541976,2020,"REGIAO SUL",30192315,1795.07931074513
+"250","4","Causas externas de morbidade e de mortalidade",2021,136409,2020,"REGIAO SUL",30192315,451.800400201177
+"251","4","Doenças da pele e do tecido subcutâneo",2021,2522,2020,"REGIAO SUL",30192315,8.35311899733426
+"252","4","Doenças do aparelho circulatório",2021,219856,2020,"REGIAO SUL",30192315,728.185301458335
+"253","4","Doenças do aparelho digestivo",2021,51494,2020,"REGIAO SUL",30192315,170.553334515753
+"254","4","Doenças do aparelho geniturinário",2021,28065,2020,"REGIAO SUL",30192315,92.9541176289397
+"255","4","Doenças do aparelho respiratório",2021,77973,2020,"REGIAO SUL",30192315,258.254459785545
+"256","4","Doenças do olho e anexos",2021,16,2020,"REGIAO SUL",30192315,0.0529936177467677
+"257","4","Doenças do ouvido e da apófise mastóide",2021,74,2020,"REGIAO SUL",30192315,0.245095482078801
+"258","4","Doenças do sangue e dos órgãos hematopoéticos e alguns transtornos imunitários",2021,3967,2020,"REGIAO SUL",30192315,13.1391051000892
+"259","4","Doenças do sistema nervoso",2021,33848,2020,"REGIAO SUL",30192315,112.107998343287
+"260","4","Doenças do sistema osteomuscular e do tecido conjuntivo",2021,3909,2020,"REGIAO SUL",30192315,12.9470032357572
+"261","4","Doenças endócrinas, nutricionais e metabólicas",2021,100413,2020,"REGIAO SUL",30192315,332.578008675386
+"262","4","Gravidez, parto e puerpério",2021,2523,2020,"REGIAO SUL",30192315,8.35643109844343
+"263","4","Malformações congênitas, deformidades e anomalias cromossômicas",2021,8838,2020,"REGIAO SUL",30192315,29.2723496028708
+"264","4","Neoplasmas [tumores]",2021,207952,2020,"REGIAO SUL",30192315,688.75804985474
+"265","4","Sintomas, sinais e achados anormais de exames clínicos e de laboratório, não classificados em outra parte",2021,16377,2020,"REGIAO SUL",30192315,54.2422798649259
+"266","4","Transtornos mentais e comportamentais",2021,16850,2020,"REGIAO SUL",30192315,55.8089036895647
+"267","5","Algumas afecções originadas no período perinatal",2021,16685,2020,"REGIAO CENTRO-OESTE",16504303,101.094847810295
+"268","5","Algumas doenças infecciosas e parasitárias",2021,289714,2020,"REGIAO CENTRO-OESTE",16504303,1755.38464120539
+"269","5","Causas externas de morbidade e de mortalidade",2021,76275,2020,"REGIAO CENTRO-OESTE",16504303,462.152203579879
+"270","5","Doenças da pele e do tecido subcutâneo",2021,1111,2020,"REGIAO CENTRO-OESTE",16504303,6.73157781943291
+"271","5","Doenças do aparelho circulatório",2021,98931,2020,"REGIAO CENTRO-OESTE",16504303,599.425495278413
+"272","5","Doenças do aparelho digestivo",2021,24624,2020,"REGIAO CENTRO-OESTE",16504303,149.197454748619
+"273","5","Doenças do aparelho geniturinário",2021,12449,2020,"REGIAO CENTRO-OESTE",16504303,75.4288139281011
+"274","5","Doenças do aparelho respiratório",2021,39176,2020,"REGIAO CENTRO-OESTE",16504303,237.368400228716
+"275","5","Doenças do olho e anexos",2021,8,2020,"REGIAO CENTRO-OESTE",16504303,0.048472207520669
+"276","5","Doenças do ouvido e da apófise mastóide",2021,28,2020,"REGIAO CENTRO-OESTE",16504303,0.169652726322342
+"277","5","Doenças do sangue e dos órgãos hematopoéticos e alguns transtornos imunitários",2021,2045,2020,"REGIAO CENTRO-OESTE",16504303,12.390708047471
+"278","5","Doenças do sistema nervoso",2021,10720,2020,"REGIAO CENTRO-OESTE",16504303,64.9527580776965
+"279","5","Doenças do sistema osteomuscular e do tecido conjuntivo",2021,2155,2020,"REGIAO CENTRO-OESTE",16504303,13.0572009008802
+"280","5","Doenças endócrinas, nutricionais e metabólicas",2021,36477,2020,"REGIAO CENTRO-OESTE",16504303,221.01508921643
+"281","5","Gravidez, parto e puerpério",2021,1902,2020,"REGIAO CENTRO-OESTE",16504303,11.5242673380391
+"282","5","Malformações congênitas, deformidades e anomalias cromossômicas",2021,5670,2020,"REGIAO CENTRO-OESTE",16504303,34.3546770802742
+"283","5","Neoplasmas [tumores]",2021,69870,2020,"REGIAO CENTRO-OESTE",16504303,423.344142433643
+"284","5","Sintomas, sinais e achados anormais de exames clínicos e de laboratório, não classificados em outra parte",2021,6292,2020,"REGIAO CENTRO-OESTE",16504303,38.1233912150062
+"285","5","Transtornos mentais e comportamentais",2021,7327,2020,"REGIAO CENTRO-OESTE",16504303,44.3944830629927

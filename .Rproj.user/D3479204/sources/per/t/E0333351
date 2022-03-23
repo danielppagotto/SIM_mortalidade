@@ -1,0 +1,32 @@
+{
+    "id": "E0333351",
+    "path": null,
+    "project_path": null,
+    "type": "r_dataframe",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1647979922149.0,
+    "source_on_save": false,
+    "relative_order": 7,
+    "properties": {
+        "expression": "sim_regioes",
+        "caption": "sim_regioes",
+        "totalObservations": "286",
+        "displayedObservations": "286",
+        "variables": "8",
+        "cacheKey": "B894805D",
+        "object": "sim_regioes",
+        "environment": "",
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=sim_regioes&cache_key=B894805D&max_cols=50",
+        "preview": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 13511013634211895,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1647979922149,
+    "read_only": false,
+    "read_only_alternatives": []
+}

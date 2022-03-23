@@ -1,0 +1,32 @@
+{
+    "id": "72E0AC5F",
+    "path": null,
+    "project_path": null,
+    "type": "r_dataframe",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1647978425066.0,
+    "source_on_save": false,
+    "relative_order": 4,
+    "properties": {
+        "expression": "sim19_t",
+        "caption": "sim19_t",
+        "totalObservations": 95,
+        "displayedObservations": 95,
+        "variables": 8,
+        "cacheKey": "BA8C6B27",
+        "object": "sim19_t",
+        "environment": "",
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=sim19_t&cache_key=BA8C6B27&max_cols=50",
+        "preview": 0
+    },
+    "folds": "",
+    "lastKnownWriteTime": 13511013634211895,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1647978425066,
+    "read_only": false,
+    "read_only_alternatives": []
+}

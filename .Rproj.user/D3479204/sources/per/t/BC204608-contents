@@ -1,0 +1,1165 @@
+library(tidyverse)
+library(roperators)
+library(lubridate)
+library(microdatasus)
+library(readxl)
+
+options(scipen = 999)
+
+setwd("~/Dimensionamento/Demanda urg e emergencia/Indicadores de ?bitos")
+
+# lendo bases -------------------------------------------------------------
+
+# familia_cbo <- read_csv2("https://raw.githubusercontent.com/danielppagotto/bases_uteis_saude/main/CBOs/CBO2002%20-%20Familia.csv",
+#                          locale = locale(encoding = "latin1"))
+# 
+cid10 <- read_csv2("https://raw.githubusercontent.com/danielppagotto/bases_uteis_saude/main/cid_10.csv") %>% janitor::clean_names()
+
+cid_10_categorias <- cid10 %>%
+  select(cod_cat, categoria) %>%
+  distinct(cod_cat, categoria)
+# 
+municipios <- read_csv2("https://raw.githubusercontent.com/danielppagotto/bases_uteis_saude/main/lista_dados_sage.csv")
+
+municipios <- municipios %>%
+                  mutate(uf_cod = as.integer(str_sub(ibge, end = 2)))
+
+uf <- municipios %>%
+          select(uf_cod, uf) %>%
+          distinct()
+
+macrorregioes <- read_csv2("https://raw.githubusercontent.com/danielppagotto/bases_uteis_saude/main/municipios_regioes_saude.csv")
+macrorregioes <- macrorregioes[,1:10]
+macrorregioes$CO_MUNICIP <- as.character(macrorregioes$CO_MUNICIP)
+
+populacao <- read_csv2("https://raw.githubusercontent.com/danielppagotto/bases_uteis_saude/main/populacao.csv",
+                       locale = locale(encoding = "latin1")) %>% 
+             filter(ano > 2017 & ano < 2021)
+
+populacao_uf <- populacao %>% 
+                    mutate(uf_cod = as.integer(str_sub(ibge, end = 2))) %>% 
+                    group_by(uf_cod, ano) %>% 
+                    summarize(pop_uf = sum(populacao)) 
+  
+
+pop_uf2020 <- readxl::read_excel("~/Dimensionamento/Demanda urg e emergencia/Indicadores de ?bitos/pop_uf2020.xlsx") %>% 
+                  gather(key = "faixa_etaria", value = "total", 3:11) %>% 
+                  mutate(ano = 2020)
+
+pop_uf2019 <- read_excel("~/Dimensionamento/Demanda urg e emergencia/Indicadores de ?bitos/pop_uf2019.xlsx") %>% 
+                  gather(key = "faixa_etaria", value = "total", 3:11) %>% 
+                  mutate(ano = 2019)
+
+pop_uf_idade <- rbind(pop_uf2019, pop_uf2020)
+
+
+# populacao_spread <- populacao %>% 
+#   spread(ano, populacao)
+#writexl::write_xlsx(populacao_spread,"populacao17_20.xlsx")
+
+df_sih_infarto <- sqlQuery(channel, "SELECT MUNIC_RES, DT_INTER, COUNT(DISTINCT N_AIH) AS QTD 
+                                    FROM Dados.sih.RD 
+                                    WHERE SUBSTR(DT_INTER, 0,4) >= 2019 AND SUBSTR(DT_INTER,0,4) < 2021 
+                                    AND DIAG_PRINC LIKE 'I21%' 
+                                    GROUP BY MUNIC_RES, DT_INTER") 
+
+
+df_sih_avc <- sqlQuery(channel, "SELECT MUNIC_RES, DT_INTER, COUNT(DISTINCT N_AIH) AS QTD 
+                                 FROM Dados.sih.RD 
+                                 WHERE SUBSTR(DT_INTER, 0,4) >= 2019 AND SUBSTR(DT_INTER,0,4) < 2021 
+                                 AND DIAG_PRINC LIKE 'G45%' 
+                                 GROUP BY MUNIC_RES, DT_INTER")
+
+
+df_sih_trauma <- sqlQuery(channel, "SELECT MUNIC_RES, DT_INTER, DIAG_PRINC, COUNT(DISTINCT N_AIH) AS QTD 
+                                      FROM Dados.sih.RD 
+                                      WHERE SUBSTR(DT_INTER, 0,4) >= 2019 AND SUBSTR(DT_INTER,0,4) < 2021 
+                                      AND (DIAG_PRINC LIKE 'S%' OR DIAG_PRINC LIKE 'T%' OR DIAG_PRINC LIKE 'X%' OR
+                                      DIAG_PRINC LIKE 'Y%' OR DIAG_PRINC LIKE 'W%' OR DIAG_PRINC LIKE 'V%') 
+                                      GROUP BY MUNIC_RES, DT_INTER, DIAG_PRINC")
+
+df_uti_trauma <- sqlQuery(channel, "SELECT MUNIC_RES, DT_INTER, DIAG_PRINC, COUNT(DISTINCT N_AIH) AS QTD 
+                                    FROM Dados.sih.RD
+                                    WHERE SUBSTR(DT_INTER, 0,4) >= 2019 AND SUBSTR(DT_INTER,0,4) < 2021  
+                                    AND (DIAG_PRINC LIKE 'S%' OR DIAG_PRINC LIKE 'T%' OR DIAG_PRINC LIKE 'X%' OR
+                                    DIAG_PRINC LIKE 'Y%' OR DIAG_PRINC LIKE 'W%' OR DIAG_PRINC LIKE 'V%') AND 
+                                    (MARCA_UTI = 74 OR MARCA_UTI = 75 OR MARCA_UTI = 76)
+                                    GROUP BY MUNIC_RES, DT_INTER, DIAG_PRINC")
+
+
+
+# analisando dados --------------------------------------------------------
+
+
+# infarto -----------------------------------------------------------------
+
+sih_infarto <- df_sih_infarto %>%
+                        mutate(ano = as.integer(str_sub(DT_INTER, end = 4))) %>% 
+                        mutate(uf_cod = as.integer(str_sub(MUNIC_RES, end = 2))) %>% 
+                        group_by(ano, uf_cod) %>% 
+                        summarise(qtd_internacoes = sum(QTD)) %>% 
+                        left_join(uf, by = "uf_cod") %>% 
+                        janitor::clean_names() %>% 
+                        left_join(populacao_uf, by = c("uf_cod"="uf_cod","ano"="ano")) %>% 
+                        mutate(por_mil = (qtd_internacoes/pop_uf) * 1000) %>% 
+                        filter(ano >= 2018 & ano < 2021)
+
+
+writexl::write_xlsx(sih_infarto, "infarto_internacoes.xlsx")
+
+infarto_spread_internacoes <- sih_infarto %>% 
+  select(uf, uf_cod, ano, qtd_internacoes) %>% 
+  spread(ano, qtd_internacoes) %>% 
+  rename(internacoes_2018 = `2018`, internacoes_2019 = `2019`,
+         internacoes_2020 = `2020`) 
+
+infarto_spread_pormil <- sih_infarto %>% 
+  select(uf_cod, ano, por_mil) %>% 
+  spread(ano, por_mil) %>% 
+  rename(pormil_2018 = `2018`, pormil_2019 = `2019`,
+         pormil_2020 = `2020`) 
+
+
+infarto_spread <- infarto_spread_internacoes %>% 
+                      left_join(infarto_spread_pormil, by = "uf_cod") 
+
+writexl::write_xlsx(infarto_spread, "infarto_evolucao_uf.xlsx")
+
+# avc ---------------------------------------------------------------------
+
+sih_avc <- df_sih_avc %>%
+  mutate(ano = as.integer(str_sub(DT_INTER, end = 4))) %>% 
+  mutate(uf_cod = as.integer(str_sub(MUNIC_RES, end = 2))) %>% 
+  group_by(ano, uf_cod) %>% 
+  summarise(qtd_internacoes = sum(QTD)) %>% 
+  left_join(uf, by = "uf_cod") %>% 
+  janitor::clean_names() %>% 
+  left_join(populacao_uf, by = c("uf_cod"="uf_cod","ano"="ano")) %>% 
+  mutate(por_mil = (qtd_internacoes/pop_uf) * 1000) %>% 
+  filter(ano >= 2018 & ano < 2021)
+
+writexl::write_xlsx(sih_avc, "avc_internacoes.xlsx")
+
+# Espalhando os dados 
+
+avc_spread_internacoes <- sih_avc %>% 
+  select(uf, ano, munic_res, municipio, qtd_internacoes) %>% 
+  spread(ano, qtd_internacoes) %>% 
+  rename(internacoes_2018 = `2018`, internacoes_2019 = `2019`,
+         internacoes_2020 = `2020`) 
+
+
+avc_spread_pormil <- sih_avc %>% 
+  select(ano, munic_res, uf, municipio, por_mil) %>% 
+  spread(ano, por_mil) %>% 
+  rename(pormil_2018 = `2018`, pormil_2019 = `2019`,
+         pormil_2020 = `2020`) %>% 
+  select(-uf, -municipio)
+
+
+avc_spread <- avc_spread_internacoes %>% 
+  left_join(avc_spread_pormil, by = "munic_res") 
+
+avc_spread[is.na(avc_spread)] <- 0
+
+writexl::write_xlsx(avc_spread, "avc_evolucao.xlsx")
+
+# traumatismo -------------------------------------------------------------
+
+sih_trauma <- df_sih_trauma %>% 
+            mutate(ano = as.integer(str_sub(DT_INTER, end = 4))) %>% 
+            mutate(uf_cod = as.integer(str_sub(MUNIC_RES, end = 2))) %>% 
+            group_by(ano, uf_cod) %>% 
+            summarise(qtd_internacoes = sum(QTD)) %>% 
+            left_join(uf, by = "uf_cod") %>% 
+            janitor::clean_names() %>% 
+            left_join(populacao_uf, by = c("uf_cod"="uf_cod","ano"="ano")) %>% 
+            mutate(por_mil = (qtd_internacoes/pop_uf) * 1000) %>% 
+            filter(ano >= 2018 & ano < 2021)
+
+writexl::write_xlsx(sih_trauma, "trauma_internacoes.xlsx")
+
+trauma_spread_pormil <- sih_trauma %>% 
+  select(ano, munic_res, uf, municipio, por_mil) %>% 
+  spread(ano, por_mil) %>% 
+  rename(pormil_2018 = `2018`, pormil_2019 = `2019`,
+         pormil_2020 = `2020`) %>% 
+  select(-uf, -municipio)
+
+trauma_spread_internacoes <- sih_trauma %>% 
+  select(ano, munic_res, uf, municipio, internacao) %>% 
+  spread(ano, internacao) %>% 
+  rename(internacoes_2018 = `2018`, internacoes_2019 = `2019`,
+         internacoes_2020 = `2020`) 
+
+trauma_spread <- trauma_spread_internacoes %>% 
+  left_join(trauma_spread_pormil, by = "munic_res") 
+
+trauma_spread[is.na(trauma_spread)] <- 0
+
+writexl::write_xlsx(trauma_spread, "trauma_evolucao.xlsx")
+
+# trauma - UTI ------------------------------------------------------------
+
+sih_trauma_uti <- df_uti_trauma %>% 
+  mutate(ano = as.integer(str_sub(DT_INTER, end = 4))) %>% 
+  mutate(uf_cod = as.integer(str_sub(MUNIC_RES, end = 2))) %>% 
+  group_by(uf_cod, ano) %>% 
+  summarise(internacao = sum(QTD)) %>% 
+  left_join(uf, by = "uf_cod") %>% 
+  janitor::clean_names() %>% 
+  left_join(populacao_uf, by = c("uf_cod"="uf_cod","ano"="ano")) %>% 
+  mutate(por_mil = (internacao/pop_uf) * 1000) %>% 
+  filter(ano >= 2018 & ano < 2021)
+
+writexl::write_xlsx(sih_trauma_uti, "sih_trauma_uti.xlsx")
+
+trauma_spread_pormil_uti <- sih_trauma_uti %>% 
+  select(ano, munic_res, uf, municipio, por_mil) %>% 
+  spread(ano, por_mil) %>% 
+  rename(pormil_2018 = `2018`, pormil_2019 = `2019`,
+         pormil_2020 = `2020`) %>% 
+  select(-uf, -municipio)
+
+trauma_spread_internacoes_uti <- sih_trauma_uti %>% 
+  select(ano, munic_res, uf, municipio, internacao) %>% 
+  spread(ano, internacao) %>% 
+  rename(internacoes_2018 = `2018`, internacoes_2019 = `2019`,
+         internacoes_2020 = `2020`) 
+
+trauma_spread_uti <- trauma_spread_internacoes_uti %>% 
+  left_join(trauma_spread_pormil_uti, by = "munic_res") 
+
+trauma_spread_uti[is.na(trauma_spread_uti)] <- 0
+
+writexl::write_xlsx(trauma_spread_uti, "trauma_uti_evolucao.xlsx")
+
+# An?lises - srag ---------------------------------------------------------
+
+setwd("~/Dimensionamento/Demanda urg e emergencia/srag")
+
+# 2018
+
+srag_2018_site <- read_delim("influd18_limpo-final.csv",
+                                ";", escape_double = FALSE, trim_ws = TRUE)
+
+notificacoes_2018 <- srag_2018_site %>% 
+                        distinct(CS_SEXO, DT_NASC, DT_NOTIFIC, ID_MUNICIP, ID_MN_RESI, .keep_all = TRUE) %>% 
+                        group_by(NU_ANO, ID_MN_RESI) %>% 
+                        summarise(n_notificacoes = n()) %>% 
+                        filter(NU_ANO == "2018") %>% 
+                        left_join(municipios, by = c("ID_MN_RESI" = "ibge")) %>% 
+                        left_join(populacao, by = c("ID_MN_RESI" = "ibge",
+                                                    "NU_ANO" = "ano")) %>% 
+                        mutate(notificaoes_por_mil = 1000 * (n_notificacoes/populacao)) %>% 
+                        select(-municipio, -regiao, -no_regiao) %>% 
+                        rename(ano = NU_ANO, munic_res = ID_MN_RESI) 
+
+
+srag_2019_site <- read_delim("influd19_limpo-27.04.2020-final.csv",
+                             ";", escape_double = FALSE, trim_ws = TRUE)
+
+notificacoes_2019 <- srag_2019_site %>% 
+  distinct(CS_SEXO, DT_NASC, DT_NOTIFIC, CO_MUN_NOT, CO_MUN_RES, .keep_all = TRUE) %>% 
+  mutate(ano = as.integer(str_sub(DT_NOTIFIC, start = 7)), .after = DT_NOTIFIC) %>% 
+  mutate(uf_cod = as.integer(str_sub(CO_MUN_RES, end = 2))) %>% 
+  group_by(ano, uf_cod) %>% 
+  summarise(n_notificacoes = n()) %>% 
+  filter(ano == "2019") %>% 
+  left_join(uf, by = "uf_cod") %>% 
+  left_join(populacao_uf, by = c("uf_cod"="uf_cod","ano"="ano")) %>% 
+  mutate(notificaoes_por_mil = 1000 * (n_notificacoes/pop_uf)) %>% 
+  filter(uf_cod != "NA")
+
+
+srag_2020_site <- vroom::vroom("INFLUD-30-08-2021.csv")
+
+notificacoes_2020 <- srag_2020_site %>% 
+  distinct(CS_SEXO, DT_NASC, DT_NOTIFIC, CO_MUN_NOT, CO_MUN_RES, .keep_all = TRUE) %>% 
+  mutate(ano = as.integer(str_sub(DT_NOTIFIC, start = 7)), .after = DT_NOTIFIC) %>% 
+  mutate(uf_cod = as.integer(str_sub(CO_MUN_RES, end = 2))) %>% 
+  group_by(ano, uf_cod) %>% 
+  summarise(n_notificacoes = n()) %>% 
+  filter(ano == "2020") %>% 
+  left_join(uf, by = "uf_cod") %>% 
+  left_join(populacao_uf, by = c("uf_cod"="uf_cod","ano"="ano")) %>% 
+  mutate(notificaoes_por_mil = 1000 * (n_notificacoes/pop_uf)) %>% 
+  filter(uf_cod != "NA")
+
+
+srag_notificacoes <- rbind(notificacoes_2019,
+                           notificacoes_2020)
+
+
+srag_pormil <- srag_notificacoes %>% 
+  select(ano, munic_res, uf, cidade, notificaoes_por_mil) %>% 
+  spread(ano, notificaoes_por_mil) %>% 
+  rename(pormil_2018 = `2018`, pormil_2019 = `2019`,
+         pormil_2020 = `2020`) %>% 
+  select(-uf, -cidade)
+
+srag_total <- srag_notificacoes %>% 
+  select(ano, munic_res, uf, cidade, n_notificacoes) %>% 
+  spread(ano, n_notificacoes) %>% 
+  rename(notific_2018 = `2018`, notific_2019 = `2019`,
+         notific_2020 = `2020`) 
+
+srag_total_notific <- srag_pormil %>% 
+  left_join(srag_total, by = "munic_res") 
+
+srag_total_notific[is.na(srag_total_notific)] <- 0
+
+
+writexl::write_xlsx(srag_notificacoes, "srag_evolucao.xlsx")
+
+# 2019
+ 
+uti_2018 <- srag_2018_site %>% 
+  filter(UTI == 1) %>% 
+  distinct(CS_SEXO, DT_NASC, DT_NOTIFIC, ID_MUNICIP, ID_MN_RESI, .keep_all = TRUE) %>% 
+  group_by(NU_ANO, ID_MN_RESI) %>% 
+  summarise(internacoes_uti = n()) %>% 
+  filter(NU_ANO == "2018") %>% 
+  left_join(municipios, by = c("ID_MN_RESI" = "ibge")) %>% 
+  left_join(populacao, by = c("ID_MN_RESI" = "ibge",
+                              "NU_ANO" = "ano")) %>% 
+  mutate(internacoes_por_mil = 1000 * (internacoes_uti/populacao)) %>% 
+  select(-municipio, -regiao, -no_regiao, -NU_ANO) %>% 
+  rename(ano = NU_ANO, munic_res = ID_MN_RESI)
+
+
+uti_2019 <- srag_2019_site %>% 
+  filter(UTI == 1) %>% 
+  distinct(CS_SEXO, DT_NASC, DT_NOTIFIC, ID_MUNICIP, CO_MUN_RES, .keep_all = TRUE) %>% 
+  mutate(ano = as.integer(str_sub(DT_NOTIFIC, start = 7)), .after = DT_NOTIFIC) %>% 
+  mutate(uf_cod = as.integer(str_sub(CO_MUN_RES, end = 2))) %>% 
+  group_by(ano, uf_cod) %>% 
+  summarise(internacoes_uti = n()) %>% 
+  filter(ano == "2019") %>% 
+  left_join(uf, by = "uf_cod") %>% 
+  left_join(populacao_uf, by = c("uf_cod" = "uf_cod",
+                              "ano" = "ano")) %>% 
+  mutate(internacoes_por_mil = 1000 * (internacoes_uti/pop_uf)) %>% 
+  filter(uf_cod != "NA")
+
+
+# 2020
+
+uti_2020 <- srag_2020_site %>% 
+  filter(UTI == 1) %>% 
+  distinct(CS_SEXO, DT_NASC, DT_NOTIFIC, ID_MUNICIP, CO_MUN_RES, .keep_all = TRUE) %>% 
+  mutate(ano = as.integer(str_sub(DT_NOTIFIC, start = 7)), .after = DT_NOTIFIC) %>% 
+  mutate(uf_cod = as.integer(str_sub(CO_MUN_RES, end = 2))) %>% 
+  group_by(ano, uf_cod) %>% 
+  summarise(internacoes_uti = n()) %>% 
+  filter(ano == "2020") %>% 
+  left_join(uf, by = "uf_cod") %>% 
+  left_join(populacao_uf, by = c("uf_cod" = "uf_cod",
+                                 "ano" = "ano")) %>% 
+  mutate(internacoes_por_mil = 1000 * (internacoes_uti/pop_uf)) %>% 
+  filter(uf_cod != "NA")
+
+# conjugando todos 
+
+SRAG_uti <- rbind(uti_2019, uti_2020)
+
+srag_uti_pormil <- SRAG_uti %>% 
+  select(ano, munic_res, uf, cidade, internacoes_por_mil) %>% 
+  spread(ano, internacoes_por_mil) %>% 
+  rename(pormil_2018 = `2018`, pormil_2019 = `2019`,
+         pormil_2020 = `2020`) %>% 
+  select(-uf, -cidade)
+
+srag_uti_total <- SRAG_uti %>% 
+  select(ano, munic_res, uf, cidade, internacoes_uti) %>% 
+  spread(ano, internacoes_uti) %>% 
+  rename(notific_2018 = `2018`, notific_2019 = `2019`,
+         notific_2020 = `2020`) 
+
+SRAG_uti_evolucao <- srag_uti_pormil %>% 
+  left_join(srag_uti_total, by = "munic_res") 
+
+writexl::write_xlsx(SRAG_uti, "uti_srag_evolucao.xlsx")
+
+writexl::write_xlsx(notificacoes, "notificacoes_srag.xlsx")
+
+
+# ?bitos tr?nsito  --------------------------------------------------------
+
+sim_transito <- sqlQuery(channel, "SELECT * FROM Dados.sim.DO
+                                     WHERE CAUSABAS LIKE 'V%' 
+                                     AND competencia >= 2017") 
+
+
+setwd("~/Dimensionamento/Demanda urg e emergencia/Indicadores/Trauma/?bitos")
+
+sim_2020 <- read_delim("~/Dimensionamento/Demanda urg e emergencia/Indicadores/Trauma/?bitos/sim_2020.csv", 
+                       ";", escape_double = FALSE, trim_ws = TRUE) 
+
+sim_2020_transp_trat <- sim_2020 %>% 
+                       filter(str_detect(CAUSABAS, "^V")) %>% 
+                       group_by(CODMUNRES) %>% 
+                       summarise(obitos_2020 = n())
+
+
+sim_transporte <- read_delim("~/Dimensionamento/Demanda urg e emergencia/Indicadores/Trauma/?bitos/SIM-transporte.csv", 
+                             ";", escape_double = FALSE, locale = locale(date_names = "pt", 
+                                                                         encoding = "ISO-8859-1", asciify = TRUE), 
+                                                                         trim_ws = TRUE) %>% select(-municipio)
+sim_transporte_tratado <- sim_transporte %>% 
+                              left_join(sim_2020_transp_trat, by = c("cod_ibge" = "CODMUNRES")) %>% 
+                              left_join(populacao_spread, by = c("cod_ibge"="ibge")) 
+
+writexl::write_xlsx(sim_transporte_tratado, "SIM_transitos.xlsx")
+
+############################################################################           
+# Arma de fogo ------------------------------------------------------------#
+############################################################################
+
+
+setwd("~/Dimensionamento/Demanda urg e emergencia/Indicadores/Trauma/?bitos/Arma de fogo")
+
+sim_2020 <- read_delim("~/Dimensionamento/Demanda urg e emergencia/Indicadores/Trauma/?bitos/sim_2020.csv", 
+                       ";", escape_double = FALSE, trim_ws = TRUE) 
+
+
+sim_arma_de_fogo <- read_delim("~/Dimensionamento/Demanda urg e emergencia/Indicadores/Trauma/?bitos/Arma de fogo/sim_arma de fogo.csv", 
+                               ";", escape_double = FALSE, locale = locale(date_names = "pt", 
+                                                                           encoding = "ISO-8859-1", asciify = TRUE), 
+                                                                           trim_ws = TRUE) %>% select(-municipio) 
+sim_2020_arma_trat <- sim_2020 %>% 
+  filter(str_detect(CAUSABAS, "^X93") |
+         str_detect(CAUSABAS, "^X94") |
+         str_detect(CAUSABAS, "^X95"))  %>% 
+  group_by(CODMUNRES) %>% 
+  summarise(obitos_2020 = n()) 
+
+sim_arma_de_fogo_tratado <- sim_arma_de_fogo %>% 
+  left_join(sim_2020_arma_trat, by = c("cod_ibge" = "CODMUNRES")) %>% 
+  gather(key = "ano", value = "total", 2:5) %>% 
+  separate(ano, c("obito","ano"), "_") %>% 
+  select(-obito) %>% 
+  mutate(ano = as.integer(ano)) %>% 
+  left_join(populacao, by = c("ano", "cod_ibge"="ibge")) %>% 
+  left_join(macrorregioes, by = c("cod_ibge"="CO_MUNICIP")) %>% 
+  janitor::clean_names() %>% 
+  filter(municipio != "NA")
+
+sim_arma_de_fogo_tratado$total[is.na(sim_arma_de_fogo_tratado$total)] <- 0
+
+evolucao <- sim_arma_de_fogo_tratado %>% 
+                  select(cod_ibge, uf, co_macsaud, ds_nome2, municipio, 
+                         ano, populacao, total) %>% 
+                  mutate(por_mil = (total/populacao) * 1000) 
+
+evolucao_pormil <- evolucao %>% 
+  select(cod_ibge, uf, co_macsaud, ds_nome2, municipio, por_mil, ano) %>% 
+  spread(ano, por_mil) %>% 
+  rename(pormil_2017 = `2017`, pormil_2018 = `2018`, pormil_2019 = `2019`,
+         pormil_2020 = `2020`) 
+
+evolucao_total <- evolucao %>% 
+  select(cod_ibge, uf, co_macsaud, ds_nome2, municipio, total, ano) %>% 
+  spread(ano, total) %>% 
+  rename(total_2017 = `2017`, total_2018 = `2018`, total_2019 = `2019`,
+         total_2020 = `2020`) 
+
+
+obito_arma_fogo <- evolucao_pormil %>% 
+  left_join(evolucao_total, by = "cod_ibge") 
+
+writexl::write_xlsx(obito_arma_fogo, "obito_arma_fogo.xlsx")                          
+
+evolucao_macrorregiao <- evolucao %>% 
+                          group_by(uf, co_macsaud, ds_nome2, ano) %>% 
+                          summarise(total_obitos = sum(total),
+                                    total_pop = sum(populacao)) %>% 
+                          mutate(por_mil = (total_obitos/total_pop) * 1000) 
+
+evolucao_macrrorregiao_pormil <- evolucao_macrorregiao %>% 
+  select(uf, co_macsaud, ds_nome2, por_mil, ano) %>% 
+  spread(ano, por_mil) %>% 
+  rename(pormil_2017 = `2017`, pormil_2018 = `2018`, pormil_2019 = `2019`,
+         pormil_2020 = `2020`) 
+
+evolucao_macrorregiao_total <- evolucao_macrorregiao %>% 
+  select(uf, co_macsaud, ds_nome2, total_obitos, ano) %>% 
+  spread(ano, total_obitos) %>% 
+  rename(total_2017 = `2017`, total_2018 = `2018`, total_2019 = `2019`,
+         total_2020 = `2020`) 
+
+obito_macrorregiao_arma_fogo <- evolucao_macrrorregiao_pormil %>% 
+  left_join(evolucao_macrorregiao_total, by = "co_macsaud") 
+
+writexl::write_xlsx(obito_macrorregiao_arma_fogo, "obito_macrorregiao_arma.xlsx")
+
+
+############################################################################           
+# Arma branca  ------------------------------------------------------------#
+############################################################################
+
+setwd("~/Dimensionamento/Demanda urg e emergencia/Indicadores/Trauma/?bitos/Arma branca")
+
+sim_arma_branca <- read_delim("~/Dimensionamento/Demanda urg e emergencia/Indicadores/Trauma/?bitos/Arma branca/?bitos_arma_branca.csv", 
+                               ";", escape_double = FALSE, locale = locale(date_names = "pt", 
+                                                                           encoding = "ISO-8859-1", asciify = TRUE), 
+                               trim_ws = TRUE) %>% select(-municipio) 
+
+
+sim_2020_arma_branca <- sim_2020 %>% 
+  filter(str_detect(CAUSABAS, "^X99"))  %>% 
+  group_by(CODMUNRES) %>% 
+  summarise(`2020` = n()) 
+
+
+sim_arma_branca_tratado <- sim_arma_branca %>% 
+  left_join(sim_2020_arma_branca, by = c("ibge" = "CODMUNRES")) %>% 
+  gather(key = "ano", value = "total", 2:5) %>% 
+  mutate(ano = as.integer(ano)) %>% 
+  left_join(populacao, by = c("ano", "ibge"="ibge")) %>% 
+  left_join(macrorregioes, by = c("ibge"="CO_MUNICIP")) %>% 
+  janitor::clean_names() %>% 
+  filter(municipio != "NA")
+
+sim_arma_branca_tratado$total[is.na(sim_arma_branca_tratado$total)] <- 0
+
+evolucao_arma_branca <- sim_arma_de_fogo_tratado %>% 
+  select(cod_ibge, uf, co_macsaud, ds_nome2, municipio, 
+         ano, populacao, total) %>% 
+  mutate(por_mil = (total/populacao) * 1000) 
+
+evolucao_arma_branca_pormil <- evolucao_arma_branca %>% 
+  select(cod_ibge, uf, co_macsaud, ds_nome2, municipio, por_mil, ano) %>% 
+  spread(ano, por_mil) %>% 
+  rename(pormil_2017 = `2017`, pormil_2018 = `2018`, pormil_2019 = `2019`,
+         pormil_2020 = `2020`) 
+
+evolucao_arma_branca_total <- evolucao_arma_branca %>% 
+  select(cod_ibge, uf, co_macsaud, ds_nome2, municipio, total, ano) %>% 
+  spread(ano, total) %>% 
+  rename(total_2017 = `2017`, total_2018 = `2018`, total_2019 = `2019`,
+         total_2020 = `2020`) 
+
+obito_arma_branca <- evolucao_arma_branca_pormil %>% 
+  left_join(evolucao_arma_branca_total, by = "cod_ibge") 
+
+writexl::write_xlsx(obito_arma_branca, "obito_arma_branca.xlsx")                          
+
+macrorregiao_arma_branca <- evolucao_arma_branca %>% 
+  group_by(uf, co_macsaud, ds_nome2, ano) %>% 
+  summarise(total_obitos = sum(total),
+            total_pop = sum(populacao)) %>% 
+  mutate(por_mil = (total_obitos/total_pop) * 1000) 
+
+macrorregiao_arma_branca_mil <- macrorregiao_arma_branca %>% 
+  select(uf, co_macsaud, ds_nome2, por_mil, ano) %>% 
+  spread(ano, por_mil) %>% 
+  rename(pormil_2017 = `2017`, pormil_2018 = `2018`, pormil_2019 = `2019`,
+         pormil_2020 = `2020`) 
+
+macrorregiao_arma_branca_total <- macrorregiao_arma_branca %>% 
+  select(uf, co_macsaud, ds_nome2, total_obitos, ano) %>% 
+  spread(ano, total_obitos) %>% 
+  rename(total_2017 = `2017`, total_2018 = `2018`, total_2019 = `2019`,
+         total_2020 = `2020`) 
+
+obito_macrorregiao_arma_branca <- macrorregiao_arma_branca_mil %>% 
+  left_join(macrorregiao_arma_branca_total, by = "co_macsaud") 
+
+writexl::write_xlsx(obito_macrorregiao_arma_branca, "obito_macrorregiao_armabranca.xlsx")
+
+############################################################################
+# Causas de ?bito ---------------------------------------------------------#
+############################################################################
+
+setwd("~/Dimensionamento/Demanda urg e emergencia/Indicadores/Top10 obitos")
+
+# SIM 2020 ----------------------------------------------------------------
+setwd("~/Dimensionamento/Demanda urg e emergencia/Indicadores/Trauma/?bitos")
+sim_2020$CODMUNRES <- as.character(sim_2020$CODMUNRES)
+
+sim2020_tratado <- sim_2020 %>% 
+                      select(TIPOBITO, DTOBITO, DTNASC, IDADE, SEXO,
+                             CODMUNRES, CAUSABAS) %>%
+                      mutate(IDADE = as.integer(IDADE)) %>% 
+                      filter(IDADE > 400 & IDADE < 990) %>% 
+                      mutate(idade_correta = IDADE - 400) %>% 
+                      mutate(faixa_etaria = case_when(idade_correta >= 1 & idade_correta < 10 ~ "1 a 9 anos",
+                                                      idade_correta >= 10 & idade_correta < 20 ~ "10 a 19 anos",
+                                                      idade_correta >= 20 & idade_correta < 30 ~ "20 a 29 anos",
+                                                      idade_correta >= 30 & idade_correta < 40 ~ "30 a 39 anos",
+                                                      idade_correta >= 40 & idade_correta < 50 ~ "40 a 49 anos",
+                                                      idade_correta >= 50 & idade_correta < 60 ~ "50 a 59 anos",
+                                                      idade_correta >= 60 & idade_correta < 70 ~ "60 a 69 anos",
+                                                      idade_correta >= 70 & idade_correta < 79 ~ "70 a 79 anos",
+                                                      idade_correta >= 80 ~ "80 anos e mais")) %>% 
+                      mutate(cod_cat = str_sub(CAUSABAS, end = 3)) %>% 
+                      janitor::clean_names() %>% 
+                      left_join(macrorregioes, by = c("codmunres"="CO_MUNICIP")) %>% 
+                      left_join(cid_10_categorias, by = "cod_cat") %>% 
+                      filter(CO_MUNICIP_IBGE != "NA") %>% 
+                      mutate(competencia = str_sub(dtobito, start = 5))
+                                          
+# contagem_uf_2020 <- sim2020_tratado %>% 
+#   group_by(competencia, UF) %>% 
+#   summarise(total = n()) %>% 
+#   mutate(competencia = as.integer(competencia))
+# 
+# contagem_macrorregiao_2020 <- sim2020_tratado %>% 
+#   group_by(competencia, UF, DS_NOME2) %>% 
+#   summarise(total = n()) %>% 
+#   mutate(competencia = as.integer(competencia))
+
+# contagem 1.517.739
+
+contagem_uf_2020 <- sim2020_tratado %>% 
+  group_by(competencia, faixa_etaria, UF, categoria) %>% 
+  summarise(total_obitos = n()) %>% 
+  slice_max(total_obitos, n = 10)
+
+# contagem_macrorregiao_ano20_idade <- sim2020_tratado %>% 
+#   group_by(competencia, idade_correta, UF, DS_NOME2, categoria) %>% 
+#   summarise(total = n()) %>% 
+#   slice_max(total, n = 10) %>% 
+#   filter(idade_correta < 100)
+
+# SIM 19 -------------------------------------------------------------
+
+
+sim19 <- sqlQuery(channel, "SELECT TIPOBITO, DTOBITO, DTNASC, IDADE, SEXO,
+                                CODMUNRES, CAUSABAS, uf, competencia  
+                                FROM Dados.sim.DO
+                                WHERE competencia = 2019")
+
+
+# apenas 18 e 19 fora 2.666.520 observacoes
+# retirando o pessoal que n?o tem idade fica 2.661.389
+
+sim19_trat <- sim19 %>% 
+                filter(competencia > 2018) %>% 
+                filter(IDADE < 900)
+
+
+sim19_trat$CODMUNRES <- as.character(sim19_trat$CODMUNRES)
+
+sim19_trat <- sim19_trat %>% 
+                        filter(IDADE > 400) %>% 
+                        mutate(idade_correta = IDADE - 400) %>% 
+                        mutate(faixa_etaria = case_when(idade_correta >= 1 & idade_correta < 10 ~ "1 a 9 anos",
+                                                        idade_correta >= 10 & idade_correta < 20 ~ "10 a 19 anos",
+                                                        idade_correta >= 20 & idade_correta < 30 ~ "20 a 29 anos",
+                                                        idade_correta >= 30 & idade_correta < 40 ~ "30 a 39 anos",
+                                                        idade_correta >= 40 & idade_correta < 50 ~ "40 a 49 anos",
+                                                        idade_correta >= 50 & idade_correta < 60 ~ "50 a 59 anos",
+                                                        idade_correta >= 60 & idade_correta < 70 ~ "60 a 69 anos",
+                                                        idade_correta >= 70 & idade_correta < 79 ~ "70 a 79 anos",
+                                                        idade_correta >= 80 ~ "80 anos e mais")) %>% 
+                        mutate(cod_cat = str_sub(CAUSABAS, end = 3)) %>% 
+                        janitor::clean_names() %>% 
+                        left_join(macrorregioes, by = c("codmunres"="CO_MUNICIP")) %>% 
+                        left_join(cid_10_categorias, by = "cod_cat") %>% 
+                        filter(CO_MUNICIP_IBGE != "NA")
+
+
+# contagem_uf_17_19 <- sim_17_19_tratado2 %>% 
+#   group_by(competencia, UF) %>% 
+#   summarise(total = n())
+# 
+# contagem_macrorregiao_1719 <- sim_17_19_tratado2 %>% 
+#   group_by(competencia, UF, DS_NOME2) %>% 
+#   summarise(total = n())
+# 
+# total_municipios2 <- contagem_uf_ano %>% 
+#   group_by(codmunres, DS_NOMEPAD) %>% 
+#   count() %>% 
+#   slice_max(total, n = 10)
+
+contagem_uf_idade19 <- sim19_trat %>% 
+                              group_by(competencia, faixa_etaria, UF, categoria) %>% 
+                              summarise(total_obitos = n()) %>% 
+                              slice_max(total_obitos, n = 10)
+# 
+# contagem_uf_ano_idade <- sim_17_19_tratado2 %>% 
+#   group_by(competencia, idade_correta, UF, categoria) %>% 
+#   summarise(total = n()) %>% 
+#   slice_max(total, n = 10) %>% 
+#   filter(idade_correta < 100) 
+# 
+
+contagem_uf_2020$competencia <- as.integer(contagem_uf_2020$competencia)
+contagem_uf_idade19$competencia <- as.integer(contagem_uf_idade19$competencia)
+
+# 
+# 
+# total_top10_obitos <- rbind(contagem_macrorregiao_ano, 
+#                             contagem_macrorregiao_ano20)
+# 
+# 
+# total_top10_obitos_idade <- rbind(contagem_macrorregiao_ano_idade, 
+#                             contagem_macrorregiao_ano20_idade)
+# 
+# 
+# writexl::write_xlsx(contagem_uf_ano, "causaobito_uf.xlsx")
+# writexl::write_xlsx(contagem_macrorregiao_ano, "causaobito_macrorregiao.xlsx")
+# writexl::write_xlsx(total_top10_obitos_idade, "top10_obitos_idade.xlsx")
+
+# salvando os totais por UF, macrorregiao e pa?s
+
+contagem_uf <- rbind(contagem_uf_idade19, contagem_uf_2020) %>% 
+                      left_join(pop_uf_idade, by = c("UF"="UF", "faixa_etaria"="faixa_etaria",
+                                                     "competencia"="ano")) %>% 
+                      filter(faixa_etaria != "NA") %>% 
+                      mutate(taxa_mil = (total_obitos/total)*1000)
+
+
+# contagem_macrorregioes <- rbind(contagem_macrorregiao_1719, contagem_macrorregiao_2020)
+
+writexl::write_xlsx(contagem_uf, "contagem_obitos_faixaetaria_uf.xlsx")
+writexl::write_xlsx(contagem_macrorregioes, "contagem_macrorregioes.xlsx")
+
+# Indicadores de Profissionais ---------------------------------------
+
+# Samu
+
+setwd("~/Dimensionamento/Demanda urg e emergencia/Indicadores estrutura")
+
+cadger <- arrow::read_parquet("~/Dimensionamento/Demanda urg e emergencia/Indicadores estrutura/cadger_parquet.parquet") %>% 
+  select(-CODUFMUN)
+
+
+# Tratando para baixar tudo, menos capitais -------------------------------
+
+capitais <- c("110020","130260","120040","500270","160030",
+              "530010","140010","510340","172100","355030",
+              "221100","330455","150140","520870","292740",
+              "420540","211130","270430","431490","410690",
+              "310620","230440","261160","250750","280030",
+              "240810","320530")
+
+macro_unica <- macrorregioes %>% 
+  group_by(UF, DS_NOME2) %>% 
+  count() %>% 
+  group_by(UF) %>% 
+  count() %>% 
+  filter(n == 1) %>% 
+  filter(UF != "NA")
+
+macrorregioes_capitais <- macrorregioes %>% 
+                              filter(CO_MUNICIP %in% capitais) %>% 
+                              filter(UF %ni% macro_unica$UF)
+
+codigo_macro_capitais <- macrorregioes_capitais$CO_MACSAUD
+
+
+# Extraindo n?mero de profissionais ---------------------------------------
+
+unidades_sus <- sqlQuery(channel, 'SELECT CNES, uf, COMPETEN, VINC_SUS, TP_UNID
+                                   FROM Dados.cnes.ST
+                                   WHERE VINC_SUS = 1 AND COMPETEN = 202107
+                                   AND (TP_UNID = 42 OR TP_UNID = 76 OR
+                                        TP_UNID = 73 OR TP_UNID = 40 OR 
+                                        TP_UNID = 21 OR TP_UNID = 20)', as.is=c(TRUE))
+
+unidades_sus_tratado <- unidades_sus %>% 
+                      left_join(cadger, by = "CNES")
+
+unidades_sus_tratado <- unidades_sus_tratado[,1:10]
+
+unidades_sus <- unidades_sus_tratado$CNES
+
+cnes_pf <- sqlQuery(channel, 'SELECT CNES, CODUFMUN, TP_UNID, COMPETEN, CPFUNICO, 
+       CBO, CBOUNICO, NOMEPROF, CNS_PROF, CONSELHO, PROF_SUS, VINCULAC, VINCUL_A, 
+       VINCUL_C, HORAOUTR, HORA_AMB, HORAHOSP, UFMUNRES
+       FROM Dados.cnes.PF
+       WHERE COMPETEN = 202107 
+       AND (TP_UNID = 42 OR TP_UNID = 73 OR
+            TP_UNID = 40 OR TP_UNID = 21 OR 
+            TP_UNID = 20)', as.is=c(TRUE)) 
+
+# tratamento 1 ------------------------------------------------------------
+
+cnes_pf_tratado1 <- cnes_pf %>% 
+  filter(CNES %in% unidades_sus) %>% 
+  left_join(cadger, by = "CNES") %>% 
+  left_join(cbo02, by = c("CBO"="COD")) %>% 
+  left_join(macrorregioes, by = c("CODUFMUN"="CO_MUNICIP")) %>% 
+# filter(CO_MACSAUD %ni% codigo_macro_capitais) %>% 
+  mutate(fam_cbo = str_sub(CBO, end = 4)) %>% 
+  left_join(familia_cbo, by = c("fam_cbo"="CODIGO")) 
+
+categorias_mantidas1<- cnes_pf_tratado1 %>% 
+  distinct(fam_cbo, TITULO) %>% 
+  janitor::clean_names() %>% 
+  filter(str_detect(fam_cbo, "^22") |
+           str_detect(fam_cbo, "^32") |
+           str_detect(fam_cbo, "^2231")) %>% 
+  mutate(titulo = case_when(fam_cbo == "2231" ~ "M?dicos",
+                            TRUE ~ titulo))
+  
+categorias_mantidas1 <- categorias_mantidas1$fam_cbo
+
+cnes_pf_tratado_duplicatas1 <- cnes_pf_tratado1 %>% 
+  filter(fam_cbo %in% categorias_mantidas1) %>% 
+  select(UF, CODUFMUN, CO_MUNICIP_IBGE, DS_NOMEPAD, CO_REGSAUD,
+         DS_NOME2, CO_UF,  REGIAO, CNES, TP_UNID, FANTASIA, RAZ_SOCI, CPFUNICO, 
+         CBO, CBOUNICO, OCUPACAO, TITULO,NOMEPROF,PROF_SUS, CNS_PROF,  
+         HORAOUTR, HORA_AMB, HORAHOSP, 
+         RSOC_MAN, fam_cbo) %>% 
+  filter(RSOC_MAN != "NA") %>% 
+  filter((!str_detect(FANTASIA, 'ODONT'))) %>% 
+  filter((!str_detect(FANTASIA, 'CASTRA'))) %>% 
+  filter((!str_detect(FANTASIA, 'MAMO'))) %>% 
+  filter((!str_detect(FANTASIA, 'DENTAO'))) %>% 
+  filter((!str_detect(FANTASIA, 'SORRIDENTE'))) %>% 
+  filter((!str_detect(FANTASIA, 'SORRINDO'))) %>% 
+  filter((!str_detect(FANTASIA, 'SAUDE BUCAL'))) %>% 
+  filter((!str_detect(FANTASIA, 'MULHER'))) %>% 
+  filter((!str_detect(FANTASIA, 'HOMEM'))) %>% 
+  filter((!str_detect(FANTASIA, 'FARMACIA'))) %>% 
+  filter((!str_detect(FANTASIA, 'PEITO'))) %>% 
+  filter((!str_detect(FANTASIA, 'DENTINHO'))) %>% 
+  filter((!str_detect(FANTASIA, 'GINECOLOGICA'))) %>% 
+  filter((!str_detect(FANTASIA, 'SORRINDO'))) %>% 
+  filter((!str_detect(FANTASIA, 'OFTALM'))) %>% 
+  filter((!str_detect(FANTASIA, 'ORTOP'))) %>% 
+  filter((!str_detect(FANTASIA, 'UOM'))) %>% 
+  filter((!str_detect(FANTASIA, 'TOMOGRAF'))) %>% 
+  filter((!str_detect(FANTASIA, 'CARRETA'))) %>% 
+  filter((!str_detect(FANTASIA, 'UBS'))) %>% 
+  filter((!str_detect(FANTASIA, 'ONCOLOGICA'))) %>% 
+  filter((!str_detect(FANTASIA, 'NASF'))) %>% 
+  filter((!str_detect(FANTASIA, 'VACINA'))) %>% 
+  filter((!str_detect(FANTASIA, 'BUCAL'))) %>% 
+  filter((!str_detect(FANTASIA, 'CANCER'))) %>% 
+  filter((!str_detect(FANTASIA, 'CIDADANIA'))) %>% 
+  filter((!str_detect(FANTASIA, 'CONSULTORIO DE RUA'))) %>%
+  filter((!str_detect(FANTASIA, 'CONSULTORIO NA RUA'))) %>% 
+  filter((!str_detect(FANTASIA, 'SANITARI'))) %>% 
+  filter((!str_detect(FANTASIA, 'ASSENTAMENT'))) %>% 
+  filter((!str_detect(FANTASIA, 'SAUDE NO CAMPO'))) %>% 
+  filter((!str_detect(FANTASIA, 'PREFEITURA MUNICIPAL'))) %>%
+  filter((!str_detect(FANTASIA, 'EXPRESSO'))) %>%
+  filter((!str_detect(FANTASIA, 'ITINERANTE'))) %>%
+  filter((!str_detect(FANTASIA, 'DST'))) %>%
+  filter((!str_detect(FANTASIA, 'POSTO VOLANTE'))) %>%
+  filter((!str_detect(FANTASIA, 'AMBULATORIO MOVEL'))) %>%
+  mutate(TITULO = case_when(TITULO == "M?dicos cl?nicos" ~ "M?dicos",
+                            TITULO == "M?dicos em especialidades cir?rgicas" ~ "M?dicos",
+                            TITULO == "M?dicos em medicina diagn?stica e terap?utica" ~ "M?dicos",
+                            TRUE ~ TITULO)) %>% 
+  mutate(TITULO = case_when(OCUPACAO == "M?dico residente" ~ "M?dicos", 
+                            OCUPACAO == "M?dico Cardiologista Intervencionista" ~ "M?dicos",
+                            TRUE ~ TITULO)) 
+
+estrutura_urg1 <- cnes_pf_tratado_duplicatas1 %>% 
+  distinct(UF, DS_NOME2, DS_NOMEPAD, CNES, TP_UNID, FANTASIA, RAZ_SOCI, RSOC_MAN) %>% 
+  mutate(tipo = case_when(TP_UNID == "40" ~ "Unidade m?vel terrestre",
+                             TP_UNID == "42" ~ "Unidade m?vel terrestre pr?-hospitalar na ?rea de urg?ncia",
+                             TP_UNID == "73" ~ "Pronto atendimento",
+                             TP_UNID == "76" ~ "Central de regula??o m?dica de urg?ncias",
+                             TP_UNID == "20" ~ "Pronto Socorro Geral",
+                             TP_UNID == "21" ~ "Pronto Socorro Especializado")) 
+
+remocao_duplicatas_macrorregioes <- cnes_pf_tratado_duplicatas1 %>% 
+                          distinct(DS_NOME2, TITULO, NOMEPROF, CNS_PROF, .keep_all = TRUE) %>% 
+                          select(REGIAO, UF, CODUFMUN, DS_NOMEPAD, DS_NOME2, 
+                                 CNES, FANTASIA, RAZ_SOCI, RSOC_MAN, TP_UNID,
+                                 CBO, TITULO, NOMEPROF, CNS_PROF, 
+                                 PROF_SUS)
+
+remocao_duplicatas_pessoa <- cnes_pf_tratado_duplicatas1 %>% 
+  distinct(NOMEPROF, CNS_PROF, .keep_all = TRUE) %>% 
+  select(REGIAO, UF, CODUFMUN, DS_NOMEPAD, DS_NOME2, 
+         CNES, FANTASIA, RAZ_SOCI, RSOC_MAN, TP_UNID,
+         CBO, TITULO, NOMEPROF, CNS_PROF, 
+         PROF_SUS)
+  
+conferindo <- remocao_duplicatas_pessoa %>% 
+                    group_by(CNS_PROF, NOMEPROF) %>% 
+                    count()
+
+contagem_profissionais1 <- remocao_duplicatas_pessoa %>% 
+  group_by(UF, DS_NOMEPAD, DS_NOME2, TITULO) %>% 
+  count()
+
+setwd("~/Dimensionamento/Demanda urg e emergencia/Indicadores estrutura/Indicadores 15.10")
+
+writexl::write_xlsx(estrutura_urg1, "estrut_urgencia.xlsx")
+writexl::write_xlsx(remocao_duplicatas_macrorregioes, "pessoal_macrorregioes.xlsx")
+writexl::write_xlsx(remocao_duplicatas_pessoa, "pessoal_unico.xlsx")
+writexl::write_xlsx(contagem_profissionais1, "contagem_pessoal.xlsx")
+
+
+
+# tratamento 2 ------------------------------------------------------------
+
+cnes_pf_tratado2 <- cnes_pf %>% 
+  filter(PROF_SUS == "1") %>% 
+  left_join(cadger, by = "CNES") %>% 
+  left_join(cbo02, by = c("CBO"="COD")) %>% 
+  filter(CODUFMUN %ni% capitais) %>% 
+  left_join(macrorregioes, by = c("CODUFMUN"="CO_MUNICIP")) %>% 
+  mutate(fam_cbo = str_sub(CBO, end = 4)) %>% 
+  left_join(familia_cbo, by = c("fam_cbo"="CODIGO"))
+
+categorias_mantidas2 <- cnes_pf_tratado2 %>% 
+  distinct(fam_cbo, TITULO) %>% 
+  janitor::clean_names() %>% 
+  filter(str_detect(fam_cbo, "^22") |
+           str_detect(fam_cbo, "^32"))
+
+categorias_mantidas2 <- categorias_mantidas2$fam_cbo
+
+cnes_pf_tratado_duplicatas2 <- cnes_pf_tratado2 %>% 
+  filter(fam_cbo %in% categorias_mantidas2) %>% 
+  select(UF, CODUFMUN, CO_MUNICIP_IBGE, DS_NOMEPAD, CO_REGSAUD,
+         DS_NOME2, CO_UF,  REGIAO, CNES, TP_UNID, FANTASIA, RAZ_SOCI, CPFUNICO, 
+         CBO, CBOUNICO, OCUPACAO, TITULO,NOMEPROF, CNS_PROF, CONSELHO, PROF_SUS, 
+         HORAOUTR, HORA_AMB, HORAHOSP, 
+         RSOC_MAN, fam_cbo) %>% 
+  filter((!str_detect(FANTASIA, 'ODONTO'))) %>% 
+  filter((!str_detect(FANTASIA, 'CASTRA'))) %>% 
+  filter((!str_detect(FANTASIA, 'CMO CENTRO'))) %>% 
+  filter((!str_detect(FANTASIA, 'BROTHER'))) %>% 
+  filter((!str_detect(FANTASIA, 'DPR SAUDE'))) %>% 
+  filter((!str_detect(FANTASIA, 'EQUILIBRIO AMBULANCIAS'))) %>% 
+  filter((!str_detect(FANTASIA, 'FARMACIA MOVEL'))) %>% 
+  filter((!str_detect(FANTASIA, 'FENIX UTI'))) %>% 
+  filter((!str_detect(FANTASIA, 'UNIMED'))) %>%
+  filter((!str_detect(FANTASIA, 'UOM'))) %>% 
+  filter((!str_detect(FANTASIA, 'TRANSMED'))) %>% 
+  filter((!str_detect(FANTASIA, 'T4 SERVICOS DE SAUDE'))) %>% 
+  filter((!str_detect(FANTASIA, 'MAMOCLIN'))) %>% 
+  mutate(TITULO = case_when(TITULO == "M?dicos cl?nicos" ~ "M?dicos",
+                            TITULO == "M?dicos em especialidades cir?rgicas" ~ "M?dicos",
+                            TITULO == "M?dicos em medicina diagn?stica e terap?utica" ~ "M?dicos",
+                            TRUE ~ TITULO))
+
+estrutura_urg2 <- cnes_pf_tratado_duplicatas2 %>% 
+                        distinct(CNES, FANTASIA, RAZ_SOCI)
+
+contagem_profissionais2 <- cnes_pf_tratado_duplicatas2 %>% 
+  distinct(CODUFMUN, TITULO, NOMEPROF, CNS_PROF, .keep_all = TRUE) %>%  
+  group_by(UF, DS_NOMEPAD, DS_NOME2, TITULO) %>% 
+  count()
+
+writexl::write_xlsx(contagem_profisissionais, "total_profissionais.xlsx")
+
+# Unidade de Pronto Atendimento 
+
+UPA <- sqlQuery(channel, 'SELECT CNES, CODUFMUN, uf, COMPETEN, CPF_CNPJ, 
+                              VINC_SUS, TP_UNID
+                              FROM Dados.cnes.ST
+                              WHERE COMPETEN = 202107
+                              AND TP_UNID = 73', as.is=c(TRUE)) 
+
+UPA_tratado <- UPA %>% 
+  left_join(cadger, by = "CNES") %>% 
+  filter(CODUFMUN %ni% capitais) 
+
+cnes_upa <- UPA_tratado$CNES
+
+UPA_PF <- sqlQuery(channel, 'SELECT CNES, CODUFMUN, TP_UNID, COMPETEN, CPFUNICO, 
+                             CBO, CBOUNICO, NOMEPROF, CNS_PROF, PROF_SUS, 
+                             HORAOUTR, HORA_AMB, HORAHOSP, UFMUNRES
+                             FROM Dados.cnes.PF
+                             WHERE COMPETEN = 202107
+                             AND TP_UNID = 73', as.is=c(TRUE)) 
+
+UPA_tratado <- UPA_PF %>% 
+  left_join(cadger, by = "CNES") %>% 
+  left_join(cbo02, by = c("CBO"="COD")) %>% 
+  filter(CODUFMUN %ni% capitais) %>% 
+  left_join(macrorregioes, by = c("CODUFMUN"="CO_MUNICIP")) %>% 
+  mutate(fam_cbo = str_sub(CBO, end = 4)) %>% 
+  left_join(familia_cbo, by = c("fam_cbo"="CODIGO")) 
+
+categorias_mantidas <- UPA_tratado %>% 
+  distinct(fam_cbo, TITULO) %>% 
+  janitor::clean_names() %>% 
+  filter(str_detect(fam_cbo, "^22") |
+           str_detect(fam_cbo, "^32"))
+
+categorias_mantidas <- categorias_mantidas$fam_cbo
+
+UPA_pf_tratado <- UPA_tratado %>% 
+  filter(fam_cbo %in% categorias_mantidas) %>% 
+  filter(PROF_SUS == 1) %>% 
+  select(CNES, CODUFMUN, TP_UNID, CPFUNICO, CBO, CBOUNICO,
+         OCUPACAO, TITULO,NOMEPROF, CNS_PROF, CONSELHO, PROF_SUS, 
+         HORAOUTR, HORA_AMB, HORAHOSP, FANTASIA, RAZ_SOCI, 
+         RSOC_MAN, CO_MUNICIP_IBGE, DS_NOMEPAD, CO_REGSAUD,
+         DS_NOME2, CO_UF, UF, REGIAO, fam_cbo) %>% 
+  distinct(CODUFMUN, CBO, NOMEPROF, CNS_PROF, .keep_all = TRUE)
+
+
+UPA_pf_tratado$TITULO[is.na(UPA_pf_tratado$TITULO)] <- "M?dicos cl?nicos"
+
+profissionais_UPA <- UPA_pf_tratado %>% 
+                          group_by(CO_MUNICIP_IBGE, UF, DS_NOMEPAD, DS_NOME2, 
+                                   TITULO) %>% count()
+
+writexl::write_xlsx(profissionais_UPA,"profissionais_UPA.xlsx")
+
+# Hospitais  --------------------------------------------------------------
+
+hospitais_sus <- sqlQuery(channel, 'SELECT CNES, uf, COMPETEN, VINC_SUS, TP_UNID, TPGESTAO 
+                                   FROM Dados.cnes.ST
+                                   WHERE VINC_SUS = 1 AND COMPETEN = 202107
+                                   AND (TP_UNID = 05 OR TP_UNID = 07)', 
+                         as.is=c(TRUE))
+
+hospitais_sus_cnes <- hospitais_sus$CNES
+
+hospitais_sus <- hospitais_sus %>% 
+                      left_join(cadger, by = "CNES") %>%  
+                      select(CNES, TPGESTAO)  
+  
+
+
+hospitais_pf <- sqlQuery(channel, 'SELECT CNES, CODUFMUN, TP_UNID, COMPETEN, CPFUNICO, 
+                             CBO, CBOUNICO, NOMEPROF, CNS_PROF, PROF_SUS, 
+                             HORAOUTR, HORA_AMB, HORAHOSP, UFMUNRES
+                             FROM Dados.cnes.PF
+                             WHERE COMPETEN = 202107
+                             AND (TP_UNID = 05 OR TP_UNID = 07)
+                             AND HORAHOSP > 0', as.is=c(TRUE)) 
+
+write.csv(hospitais_pf,"hospitais_pf.csv")
+
+hospitais_tratado <- hospitais_pf %>% 
+  left_join(cadger, by = "CNES") %>% 
+  left_join(cbo02, by = c("CBO"="COD")) %>% 
+  #filter(CODUFMUN %ni% capitais) %>% 
+  left_join(macrorregioes, by = c("CODUFMUN"="CO_MUNICIP")) %>% 
+  mutate(fam_cbo = str_sub(CBO, end = 4)) %>% 
+  left_join(familia_cbo, by = c("fam_cbo"="CODIGO")) 
+
+categorias_mantidas <- hospitais_tratado %>% 
+  distinct(fam_cbo, TITULO) %>% 
+  janitor::clean_names() %>% 
+  filter(str_detect(fam_cbo, "^22") |
+           str_detect(fam_cbo, "^32") |
+           str_detect(fam_cbo, "^2231")) %>% 
+  mutate(titulo = case_when(fam_cbo == "2231" ~ "M?dicos",
+                            TRUE ~ titulo))
+
+categorias_mantidas <- categorias_mantidas$fam_cbo
+
+hospitais_tratado2 <- hospitais_tratado %>% 
+  filter(fam_cbo %in% categorias_mantidas) %>% 
+  select(CNES, CODUFMUN, TP_UNID, TP_GESTAO, CPFUNICO, CBO, CBOUNICO,
+         OCUPACAO, TITULO,NOMEPROF, CNS_PROF, PROF_SUS, 
+         HORAOUTR, HORA_AMB, HORAHOSP, FANTASIA, RAZ_SOCI, 
+         RSOC_MAN, CO_MUNICIP_IBGE, DS_NOMEPAD, CO_REGSAUD,
+         DS_NOME2, CO_UF, UF, REGIAO, fam_cbo) %>% 
+  mutate(TITULO = case_when(TITULO == "M?dicos cl?nicos" ~ "M?dicos",
+                            TITULO == "M?dicos em especialidades cir?rgicas" ~ "M?dicos",
+                            TITULO == "M?dicos em medicina diagn?stica e terap?utica" ~ "M?dicos",
+                            TRUE ~ TITULO)) %>% 
+  filter(RSOC_MAN != "NA")
+
+estrutura_hosp <- hospitais_tratado2 %>% 
+  left_join(hospitais_sus, by = "CNES") %>% 
+  distinct(CNES, UF, DS_NOMEPAD, TPGESTAO, FANTASIA, RAZ_SOCI, RSOC_MAN) %>% 
+  select(CNES, UF, DS_NOMEPAD, TPGESTAO, FANTASIA, RAZ_SOCI, RSOC_MAN)
+  
+
+remocao_duplicatas_macrorregioes_hosp <- hospitais_tratado2 %>% 
+  distinct(DS_NOME2, TITULO, NOMEPROF, CNS_PROF, .keep_all = TRUE) %>% 
+  select(REGIAO, UF, CODUFMUN, DS_NOMEPAD, DS_NOME2, 
+         CNES, FANTASIA, RAZ_SOCI, RSOC_MAN, TP_UNID,
+         CBO, TITULO, NOMEPROF, CNS_PROF, 
+         PROF_SUS)
+
+remocao_duplicatas_pessoa_hosp <- hospitais_tratado2 %>% 
+  distinct(NOMEPROF, CNS_PROF, .keep_all = TRUE) %>% 
+  select(REGIAO, UF, CODUFMUN, DS_NOMEPAD, DS_NOME2, 
+         CNES, FANTASIA, RAZ_SOCI, RSOC_MAN, TP_UNID,
+         CBO, TITULO, NOMEPROF, CNS_PROF, 
+         PROF_SUS)
+
+conferindo <- remocao_duplicatas_pessoa_hosp %>% 
+  group_by(CNS_PROF, NOMEPROF) %>% 
+  count()
+
+contagem_profissionais_hosp <- remocao_duplicatas_pessoa_hosp %>% 
+  group_by(UF, DS_NOMEPAD, DS_NOME2, TITULO) %>% 
+  count()
+
+
+writexl::write_xlsx(estrutura_hosp, "estrutura_hosp.xlsx")
+
+writexl::write_xlsx(remocao_duplicatas_macrorregioes_hosp, "contagem_macrorregioes_hosp.xlsx")
+
+writexl::write_xlsx(remocao_duplicatas_pessoa_hosp, "contagem_pessoal_hosp.xlsx")
+
+writexl::write_xlsx(contagem_profissionais_hosp, "contagem_profissionais_hosp.xlsx")
+
+#sum(is.na(hospitais_tratado2$CNS_PROF))
+
+# Juntando hospitais, upas e m?veis ---------------------------------------
+
+total_macrorregioes <- rbind(remocao_duplicatas_macrorregioes, remocao_duplicatas_macrorregioes_hosp)
+
+total_pessoas <- rbind(remocao_duplicatas_pessoa, remocao_duplicatas_pessoa_hosp)
+
+total_pessoas <- total_pessoas %>% 
+                  distinct(NOMEPROF, CNS_PROF, .keep_all = TRUE) %>% 
+                  mutate(tipo = case_when(TP_UNID == "40" ~ "Unidade m?vel terrestre",
+                          TP_UNID == "42" ~ "Unidade m?vel terrestre pr?-hospitalar na ?rea de urg?ncia",
+                          TP_UNID == "73" ~ "Pronto atendimento",
+                          TP_UNID == "76" ~ "Central de regula??o m?dica de urg?ncias",
+                          TP_UNID == "20" ~ "Pronto Socorro Geral",
+                          TP_UNID == "21" ~ "Pronto Socorro Especializado", 
+                          TP_UNID == "05" ~ "Hospital Geral",
+                          TP_UNID == "07" ~ "Hospital Especializado")) 
+
+conferindo <- total_pessoas %>% 
+  group_by(CNS_PROF, NOMEPROF) %>% 
+  count()
+
+contagem_profissionais_total <- total_pessoas %>% 
+  group_by(UF, DS_NOMEPAD, DS_NOME2, TITULO) %>% 
+  count()
+
+writexl::write_xlsx(total_pessoas, "total_pessoas_todas_estruturas.xlsx")
+writexl::write_xlsx(contagem_profissionais_total, "contagem_profissionais_todas.xlsx")
+
+
+
+# Contagem por UF ---------------------------------------------------------
+
+
+
+uf_sih_infarto <- sqlQuery(channel, "SELECT uf, ANO_CMPT, COUNT(DISTINCT N_AIH) AS QTD 
+                                     FROM Dados.sih.RD 
+                                     WHERE SUBSTR(DT_INTER, 0,4) >= 2018 AND SUBSTR(DT_INTER,0,4) < 2021 
+                                     AND DIAG_PRINC LIKE 'I21%' 
+                                     GROUP BY uf, ANO_CMPT") 
+
+
+df_sih_avc <- sqlQuery(channel, "SELECT MUNIC_RES, DT_INTER, COUNT(DISTINCT N_AIH) AS QTD 
+                                 FROM Dados.sih.RD 
+                                 WHERE SUBSTR(DT_INTER, 0,4) >= 2018 AND SUBSTR(DT_INTER,0,4) < 2021 
+                                 AND DIAG_PRINC LIKE 'G45%' 
+                                 GROUP BY MUNIC_RES, DT_INTER")
+
+
+df_sih_trauma <- sqlQuery(channel, "SELECT MUNIC_RES, DT_INTER, DIAG_PRINC, COUNT(DISTINCT N_AIH) AS QTD 
+                                      FROM Dados.sih.RD 
+                                      WHERE SUBSTR(DT_INTER, 0,4) >= 2018 AND SUBSTR(DT_INTER,0,4) < 2021 
+                                      AND (DIAG_PRINC LIKE 'S%' OR DIAG_PRINC LIKE 'T%' OR DIAG_PRINC LIKE 'X%' OR
+                                      DIAG_PRINC LIKE 'Y%' OR DIAG_PRINC LIKE 'W%' OR DIAG_PRINC LIKE 'V%') 
+                                      GROUP BY MUNIC_RES, DT_INTER, DIAG_PRINC")
+
+df_uti_trauma <- sqlQuery(channel, "SELECT MUNIC_RES, DT_INTER, DIAG_PRINC, COUNT(DISTINCT N_AIH) AS QTD 
+                                    FROM Dados.sih.RD
+                                    WHERE SUBSTR(DT_INTER, 0,4) >= 2018 AND SUBSTR(DT_INTER,0,4) < 2021  
+                                    AND (DIAG_PRINC LIKE 'S%' OR DIAG_PRINC LIKE 'T%' OR DIAG_PRINC LIKE 'X%' OR
+                                    DIAG_PRINC LIKE 'Y%' OR DIAG_PRINC LIKE 'W%' OR DIAG_PRINC LIKE 'V%') AND 
+                                    (MARCA_UTI = 74 OR MARCA_UTI = 75 OR MARCA_UTI = 76)
+                                    GROUP BY MUNIC_RES, DT_INTER, DIAG_PRINC")
+
+
+

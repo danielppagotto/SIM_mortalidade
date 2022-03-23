@@ -1,0 +1,6 @@
+"0","cid10 <- sqlQuery(channel, 'SELECT COD_SUBCAT, CAPITULO, COD_CAT FROM Dados.cid.""cid_10.csv""')"
+"0",""
+"0","populacao_regiao <- sqlQuery(channel, 'SELECT * FROM ""Analytics Layer"".Territorial.""População por Região e Ano""')"
+"0",""
+"0","pop20 <- populacao_regiao %>% filter(ANO == 2020) %>%  mutate(cod_regiao = as.character(cod_regiao))"
+"0","pop19 <- populacao_regiao %>% filter(ANO == 2019) %>%  mutate(cod_regiao = as.character(cod_regiao))"

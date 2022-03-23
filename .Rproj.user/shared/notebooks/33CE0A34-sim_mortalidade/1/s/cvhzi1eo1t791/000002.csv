@@ -1,0 +1,1 @@
+"0","sim_regioes <- rbind(sim19_t, sim20_t, sim21_t) %>% filter(capitulo != ""NA"")"
